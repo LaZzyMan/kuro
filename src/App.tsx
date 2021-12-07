@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import KuroMap from "./components/KuroMap";
+import {
+  createModel,
+  loadData,
+  getDefaultTrainSet,
+  trainModel,
+} from "./components/model";
+import "./App.css";
 
 function App() {
+  useEffect(() => {
+    async function train() {
+      const data: any = await loadData();
+      const { inputs, output } = data;
+      const trainSet = await getDefaultTrainSet();
+      const model = createModel();
+      trainModel(model, inputs, output, trainSet);
+    }
+    train();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <KuroMap />
     </div>
   );
 }

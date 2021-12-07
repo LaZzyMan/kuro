@@ -1,0 +1,655 @@
+{
+  "format": "layers-model",
+  "generatedBy": "keras v2.4.0",
+  "convertedBy": "TensorFlow.js Converter v3.11.0",
+  "modelTopology": {
+    "keras_version": "2.4.0",
+    "backend": "tensorflow",
+    "model_config": {
+      "class_name": "Functional",
+      "config": {
+        "name": "functional_5",
+        "layers": [
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, 1514, 19],
+              "dtype": "float32",
+              "sparse": false,
+              "ragged": false,
+              "name": "Input_LC"
+            },
+            "name": "Input_LC",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, 1514, 17],
+              "dtype": "float32",
+              "sparse": false,
+              "ragged": false,
+              "name": "Input_POI"
+            },
+            "name": "Input_POI",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, 1514, 4],
+              "dtype": "float32",
+              "sparse": false,
+              "ragged": false,
+              "name": "Input_Building"
+            },
+            "name": "Input_Building",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, 1514, 1514],
+              "dtype": "float32",
+              "sparse": false,
+              "ragged": false,
+              "name": "Input_Mobility"
+            },
+            "name": "Input_Mobility",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, 1514, 48],
+              "dtype": "float32",
+              "sparse": false,
+              "ragged": false,
+              "name": "Input_Rhythm"
+            },
+            "name": "Input_Rhythm",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "Dense",
+            "config": {
+              "name": "Hidden_LC",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 50,
+              "activation": "relu",
+              "use_bias": true,
+              "kernel_initializer": {
+                "class_name": "GlorotUniform",
+                "config": { "seed": null }
+              },
+              "bias_initializer": { "class_name": "Zeros", "config": {} },
+              "kernel_regularizer": null,
+              "bias_regularizer": null,
+              "activity_regularizer": null,
+              "kernel_constraint": null,
+              "bias_constraint": null
+            },
+            "name": "Hidden_LC",
+            "inbound_nodes": [[["Input_LC", 0, 0, {}]]]
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, null, 2],
+              "dtype": "int64",
+              "sparse": false,
+              "ragged": false,
+              "name": "Adj_indices"
+            },
+            "name": "Adj_indices",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, null],
+              "dtype": "float32",
+              "sparse": false,
+              "ragged": false,
+              "name": "Adj_values"
+            },
+            "name": "Adj_values",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "Dense",
+            "config": {
+              "name": "Hidden_POI",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 50,
+              "activation": "relu",
+              "use_bias": true,
+              "kernel_initializer": {
+                "class_name": "GlorotUniform",
+                "config": { "seed": null }
+              },
+              "bias_initializer": { "class_name": "Zeros", "config": {} },
+              "kernel_regularizer": null,
+              "bias_regularizer": null,
+              "activity_regularizer": null,
+              "kernel_constraint": null,
+              "bias_constraint": null
+            },
+            "name": "Hidden_POI",
+            "inbound_nodes": [[["Input_POI", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dense",
+            "config": {
+              "name": "Hidden_Building",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 50,
+              "activation": "relu",
+              "use_bias": true,
+              "kernel_initializer": {
+                "class_name": "GlorotUniform",
+                "config": { "seed": null }
+              },
+              "bias_initializer": { "class_name": "Zeros", "config": {} },
+              "kernel_regularizer": null,
+              "bias_regularizer": null,
+              "activity_regularizer": null,
+              "kernel_constraint": null,
+              "bias_constraint": null
+            },
+            "name": "Hidden_Building",
+            "inbound_nodes": [[["Input_Building", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dense",
+            "config": {
+              "name": "Hidden_Mobility",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 50,
+              "activation": "relu",
+              "use_bias": true,
+              "kernel_initializer": {
+                "class_name": "GlorotUniform",
+                "config": { "seed": null }
+              },
+              "bias_initializer": { "class_name": "Zeros", "config": {} },
+              "kernel_regularizer": null,
+              "bias_regularizer": null,
+              "activity_regularizer": null,
+              "kernel_constraint": null,
+              "bias_constraint": null
+            },
+            "name": "Hidden_Mobility",
+            "inbound_nodes": [[["Input_Mobility", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dense",
+            "config": {
+              "name": "Hidden_Rhythm",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 50,
+              "activation": "relu",
+              "use_bias": true,
+              "kernel_initializer": {
+                "class_name": "GlorotUniform",
+                "config": { "seed": null }
+              },
+              "bias_initializer": { "class_name": "Zeros", "config": {} },
+              "kernel_regularizer": null,
+              "bias_regularizer": null,
+              "activity_regularizer": null,
+              "kernel_constraint": null,
+              "bias_constraint": null
+            },
+            "name": "Hidden_Rhythm",
+            "inbound_nodes": [[["Input_Rhythm", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dropout",
+            "config": {
+              "name": "dropout_12",
+              "trainable": true,
+              "dtype": "float32",
+              "rate": 0.5,
+              "noise_shape": null,
+              "seed": null
+            },
+            "name": "dropout_12",
+            "inbound_nodes": [[["Hidden_LC", 0, 0, {}]]]
+          },
+          {
+            "class_name": "SqueezedSparseConversion",
+            "config": { "shape": [1514, 1514], "dtype": "float32" },
+            "name": "squeezed_sparse_conversion_2",
+            "inbound_nodes": [
+              [
+                ["Adj_indices", 0, 0, {}],
+                ["Adj_values", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "Dropout",
+            "config": {
+              "name": "dropout_13",
+              "trainable": true,
+              "dtype": "float32",
+              "rate": 0.5,
+              "noise_shape": null,
+              "seed": null
+            },
+            "name": "dropout_13",
+            "inbound_nodes": [[["Hidden_POI", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dropout",
+            "config": {
+              "name": "dropout_14",
+              "trainable": true,
+              "dtype": "float32",
+              "rate": 0.5,
+              "noise_shape": null,
+              "seed": null
+            },
+            "name": "dropout_14",
+            "inbound_nodes": [[["Hidden_Building", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dropout",
+            "config": {
+              "name": "dropout_15",
+              "trainable": true,
+              "dtype": "float32",
+              "rate": 0.5,
+              "noise_shape": null,
+              "seed": null
+            },
+            "name": "dropout_15",
+            "inbound_nodes": [[["Hidden_Mobility", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Dropout",
+            "config": {
+              "name": "dropout_16",
+              "trainable": true,
+              "dtype": "float32",
+              "rate": 0.5,
+              "noise_shape": null,
+              "seed": null
+            },
+            "name": "dropout_16",
+            "inbound_nodes": [[["Hidden_Rhythm", 0, 0, {}]]]
+          },
+          {
+            "class_name": "GraphConvolution",
+            "config": {
+              "name": "GC_LC",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 64,
+              "useBias": true
+            },
+            "name": "GC_LC",
+            "inbound_nodes": [
+              [
+                ["dropout_12", 0, 0, {}],
+                ["squeezed_sparse_conversion_2", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "GraphConvolution",
+            "config": {
+              "name": "GC_POI",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 64,
+              "useBias": true
+            },
+            "name": "GC_POI",
+            "inbound_nodes": [
+              [
+                ["dropout_13", 0, 0, {}],
+                ["squeezed_sparse_conversion_2", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "GraphConvolution",
+            "config": {
+              "name": "GC_Building",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 64,
+              "useBias": true
+            },
+            "name": "GC_Building",
+            "inbound_nodes": [
+              [
+                ["dropout_14", 0, 0, {}],
+                ["squeezed_sparse_conversion_2", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "GraphConvolution",
+            "config": {
+              "name": "GC_Mobility",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 64,
+              "useBias": true
+            },
+            "name": "GC_Mobility",
+            "inbound_nodes": [
+              [
+                ["dropout_15", 0, 0, {}],
+                ["squeezed_sparse_conversion_2", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "GraphConvolution",
+            "config": {
+              "name": "GC_Rhythm",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 64,
+              "useBias": true
+            },
+            "name": "GC_Rhythm",
+            "inbound_nodes": [
+              [
+                ["dropout_16", 0, 0, {}],
+                ["squeezed_sparse_conversion_2", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "AggregationLayer",
+            "config": {
+              "name": "graph_avg",
+              "trainable": true,
+              "dtype": "float32"
+            },
+            "name": "graph_avg",
+            "inbound_nodes": [
+              [
+                ["GC_LC", 0, 0, {}],
+                ["GC_POI", 0, 0, {}],
+                ["GC_Building", 0, 0, {}],
+                ["GC_Mobility", 0, 0, {}],
+                ["GC_Rhythm", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "Dropout",
+            "config": {
+              "name": "dropout_17",
+              "trainable": true,
+              "dtype": "float32",
+              "rate": 0.5,
+              "noise_shape": null,
+              "seed": null
+            },
+            "name": "dropout_17",
+            "inbound_nodes": [[["graph_avg", 0, 0, {}]]]
+          },
+          {
+            "class_name": "GraphConvolution",
+            "config": {
+              "name": "GC_2",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 64,
+              "useBias": true
+            },
+            "name": "GC_2",
+            "inbound_nodes": [
+              [
+                ["dropout_17", 0, 0, {}],
+                ["squeezed_sparse_conversion_2", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "InputLayer",
+            "config": {
+              "batch_input_shape": [1, null],
+              "dtype": "int32",
+              "sparse": false,
+              "ragged": false,
+              "name": "out_indices"
+            },
+            "name": "out_indices",
+            "inbound_nodes": []
+          },
+          {
+            "class_name": "GatherIndices",
+            "config": {
+              "name": "gather_indices_2",
+              "trainable": true,
+              "dtype": "float32",
+              "batch_dims": 1
+            },
+            "name": "gather_indices_2",
+            "inbound_nodes": [
+              [
+                ["GC_2", 0, 0, {}],
+                ["out_indices", 0, 0, {}]
+              ]
+            ]
+          },
+          {
+            "class_name": "Dense",
+            "config": {
+              "name": "pred_score",
+              "trainable": true,
+              "dtype": "float32",
+              "units": 6,
+              "activation": "relu",
+              "use_bias": true,
+              "kernel_initializer": {
+                "class_name": "GlorotUniform",
+                "config": { "seed": null }
+              },
+              "bias_initializer": { "class_name": "Zeros", "config": {} },
+              "kernel_regularizer": null,
+              "bias_regularizer": null,
+              "activity_regularizer": null,
+              "kernel_constraint": null,
+              "bias_constraint": null
+            },
+            "name": "pred_score",
+            "inbound_nodes": [[["gather_indices_2", 0, 0, {}]]]
+          },
+          {
+            "class_name": "Activation",
+            "config": {
+              "name": "activation_2",
+              "trainable": true,
+              "dtype": "float32",
+              "activation": "softmax"
+            },
+            "name": "activation_2",
+            "inbound_nodes": [[["pred_score", 0, 0, {}]]]
+          }
+        ],
+        "input_layers": [
+          [
+            ["Input_LC", 0, 0],
+            ["Input_POI", 0, 0],
+            ["Input_Building", 0, 0],
+            ["Input_Mobility", 0, 0],
+            ["Input_Rhythm", 0, 0]
+          ],
+          ["out_indices", 0, 0],
+          ["Adj_indices", 0, 0],
+          ["Adj_values", 0, 0]
+        ],
+        "output_layers": [["activation_2", 0, 0]]
+      }
+    },
+    "training_config": {
+      "loss": "categorical_crossentropy",
+      "metrics": ["acc"],
+      "weighted_metrics": null,
+      "loss_weights": null,
+      "optimizer_config": {
+        "class_name": "Addons>AdamW",
+        "config": {
+          "name": "AdamW",
+          "learning_rate": 0.012,
+          "decay": 0.0,
+          "beta_1": 0.9,
+          "beta_2": 0.999,
+          "epsilon": 1e-7,
+          "amsgrad": false,
+          "weight_decay": 0.009
+        }
+      }
+    }
+  },
+  "weightsManifest": [
+    {
+      "paths": ["group1-shard1of1.bin"],
+      "weights": [
+        { "name": "GC_2/GC_2_kernel", "shape": [64, 64], "dtype": "float32" },
+        {
+          "name": "GC_2/GC_2_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_2/GC_2_self_kernel",
+          "shape": [64, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_2/GC_2_bias", "shape": [64], "dtype": "float32" },
+        {
+          "name": "GC_Building/GC_Building_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Building/GC_Building_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Building/GC_Building_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Building/GC_Building_bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        { "name": "GC_LC/GC_LC_kernel", "shape": [50, 64], "dtype": "float32" },
+        {
+          "name": "GC_LC/GC_LC_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_LC/GC_LC_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_LC/GC_LC_bias", "shape": [64], "dtype": "float32" },
+        {
+          "name": "GC_Mobility/GC_Mobility_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_POI/GC_POI_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_POI/GC_POI_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_POI/GC_POI_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_POI/GC_POI_bias", "shape": [64], "dtype": "float32" },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "Hidden_Building/kernel",
+          "shape": [4, 50],
+          "dtype": "float32"
+        },
+        { "name": "Hidden_Building/bias", "shape": [50], "dtype": "float32" },
+        { "name": "Hidden_LC/kernel", "shape": [19, 50], "dtype": "float32" },
+        { "name": "Hidden_LC/bias", "shape": [50], "dtype": "float32" },
+        {
+          "name": "Hidden_Mobility/kernel",
+          "shape": [1514, 50],
+          "dtype": "float32"
+        },
+        { "name": "Hidden_Mobility/bias", "shape": [50], "dtype": "float32" },
+        { "name": "Hidden_POI/kernel", "shape": [17, 50], "dtype": "float32" },
+        { "name": "Hidden_POI/bias", "shape": [50], "dtype": "float32" },
+        {
+          "name": "Hidden_Rhythm/kernel",
+          "shape": [48, 50],
+          "dtype": "float32"
+        },
+        { "name": "Hidden_Rhythm/bias", "shape": [50], "dtype": "float32" },
+        {
+          "name": "graph_avg/graph_avg_pool_kernel",
+          "shape": [320, 64],
+          "dtype": "float32"
+        },
+        { "name": "pred_score/kernel", "shape": [64, 6], "dtype": "float32" },
+        { "name": "pred_score/bias", "shape": [6], "dtype": "float32" }
+      ]
+    }
+  ]
+}
