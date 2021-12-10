@@ -1,0 +1,15 @@
+.toolBox{
+    position:absolute;
+    width: 80px;
+    height: 200px;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.toolButton{
+    border-width: 2px;
+}

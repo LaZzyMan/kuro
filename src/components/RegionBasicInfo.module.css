@@ -1,0 +1,55 @@
+.mainContainer {
+    width: 100%;
+    height: 100%
+}
+
+.lcChart {
+    width: 100%;
+    height: 38%;
+}
+
+.poiChart {
+    width: 100%;
+    height: 38%;
+}
+
+.lcTitle{ 
+    width: 20%;
+    height: 5%;
+    position: absolute;
+    top: 8%;
+    right: 0;
+    text-align: right;
+    font-size: medium;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.poiTitle{ 
+    width: 20%;
+    height: 5%;
+    position: absolute;
+    top: 44%;
+    right: 0;
+    text-align: right;
+    font-size: medium;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.rhythmTitle{ 
+    width: 20%;
+    height: 5%;
+    position: absolute;
+    top: 76%;
+    right: 0;
+    text-align: right;
+    font-size: medium;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.rhythmChart{
+    width: 100%;
+    height: 16%;
+}

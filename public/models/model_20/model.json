@@ -1,0 +1,638 @@
+{
+  "modelTopology": {
+    "class_name": "Model",
+    "config": {
+      "name": "model2",
+      "layers": [
+        {
+          "name": "Input_LC",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, 1514, 19],
+            "dtype": "float32",
+            "sparse": false,
+            "name": "Input_LC"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Input_POI",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, 1514, 17],
+            "dtype": "float32",
+            "sparse": false,
+            "name": "Input_POI"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Input_Building",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, 1514, 4],
+            "dtype": "float32",
+            "sparse": false,
+            "name": "Input_Building"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Input_Mobility",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, 1514, 1514],
+            "dtype": "float32",
+            "sparse": false,
+            "name": "Input_Mobility"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Input_Rhythm",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, 1514, 48],
+            "dtype": "float32",
+            "sparse": false,
+            "name": "Input_Rhythm"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Hidden_LC",
+          "class_name": "Dense",
+          "config": {
+            "units": 50,
+            "activation": "relu",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "normal",
+                "seed": null
+              }
+            },
+            "bias_initializer": { "class_name": "Zeros", "config": {} },
+            "kernel_regularizer": null,
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "Hidden_LC",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Input_LC", 0, 0, {}]]]
+        },
+        {
+          "name": "Input_Adj_Indices",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, null, 2],
+            "dtype": "int32",
+            "sparse": false,
+            "name": "Input_Adj_Indices"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Input_Adj_values",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, null],
+            "dtype": "float32",
+            "sparse": false,
+            "name": "Input_Adj_values"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Hidden_POI",
+          "class_name": "Dense",
+          "config": {
+            "units": 50,
+            "activation": "relu",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "normal",
+                "seed": null
+              }
+            },
+            "bias_initializer": { "class_name": "Zeros", "config": {} },
+            "kernel_regularizer": null,
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "Hidden_POI",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Input_POI", 0, 0, {}]]]
+        },
+        {
+          "name": "Hidden_Building",
+          "class_name": "Dense",
+          "config": {
+            "units": 50,
+            "activation": "relu",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "normal",
+                "seed": null
+              }
+            },
+            "bias_initializer": { "class_name": "Zeros", "config": {} },
+            "kernel_regularizer": null,
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "Hidden_Building",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Input_Building", 0, 0, {}]]]
+        },
+        {
+          "name": "Hidden_Mobility",
+          "class_name": "Dense",
+          "config": {
+            "units": 50,
+            "activation": "relu",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "normal",
+                "seed": null
+              }
+            },
+            "bias_initializer": { "class_name": "Zeros", "config": {} },
+            "kernel_regularizer": null,
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "Hidden_Mobility",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Input_Mobility", 0, 0, {}]]]
+        },
+        {
+          "name": "Hidden_Rhythm",
+          "class_name": "Dense",
+          "config": {
+            "units": 50,
+            "activation": "relu",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "normal",
+                "seed": null
+              }
+            },
+            "bias_initializer": { "class_name": "Zeros", "config": {} },
+            "kernel_regularizer": null,
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "Hidden_Rhythm",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Input_Rhythm", 0, 0, {}]]]
+        },
+        {
+          "name": "dropout_Dropout7",
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.5,
+            "noise_shape": null,
+            "seed": null,
+            "name": "dropout_Dropout7",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Hidden_LC", 0, 0, {}]]]
+        },
+        {
+          "name": "squeezed_sparse_conversion_SqueezedSparseConversion2",
+          "class_name": "SqueezedSparseConversion",
+          "config": {
+            "name": "squeezed_sparse_conversion_SqueezedSparseConversion2",
+            "trainable": false,
+            "matrix_shape": 1514
+          },
+          "inbound_nodes": [
+            [
+              ["Input_Adj_Indices", 0, 0, {}],
+              ["Input_Adj_values", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "dropout_Dropout8",
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.5,
+            "noise_shape": null,
+            "seed": null,
+            "name": "dropout_Dropout8",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Hidden_POI", 0, 0, {}]]]
+        },
+        {
+          "name": "dropout_Dropout9",
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.5,
+            "noise_shape": null,
+            "seed": null,
+            "name": "dropout_Dropout9",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Hidden_Building", 0, 0, {}]]]
+        },
+        {
+          "name": "dropout_Dropout10",
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.5,
+            "noise_shape": null,
+            "seed": null,
+            "name": "dropout_Dropout10",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Hidden_Mobility", 0, 0, {}]]]
+        },
+        {
+          "name": "dropout_Dropout11",
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.5,
+            "noise_shape": null,
+            "seed": null,
+            "name": "dropout_Dropout11",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Hidden_Rhythm", 0, 0, {}]]]
+        },
+        {
+          "name": "GC_LC",
+          "class_name": "GraphConvolution",
+          "config": {
+            "units": 64,
+            "use_bias": true,
+            "name": "GC_LC",
+            "trainable": true
+          },
+          "inbound_nodes": [
+            [
+              ["dropout_Dropout7", 0, 0, {}],
+              ["squeezed_sparse_conversion_SqueezedSparseConversion2", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "GC_POI",
+          "class_name": "GraphConvolution",
+          "config": {
+            "units": 64,
+            "use_bias": true,
+            "name": "GC_POI",
+            "trainable": true
+          },
+          "inbound_nodes": [
+            [
+              ["dropout_Dropout8", 0, 0, {}],
+              ["squeezed_sparse_conversion_SqueezedSparseConversion2", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "GC_Building",
+          "class_name": "GraphConvolution",
+          "config": {
+            "units": 64,
+            "use_bias": true,
+            "name": "GC_Building",
+            "trainable": true
+          },
+          "inbound_nodes": [
+            [
+              ["dropout_Dropout9", 0, 0, {}],
+              ["squeezed_sparse_conversion_SqueezedSparseConversion2", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "GC_Mobility",
+          "class_name": "GraphConvolution",
+          "config": {
+            "units": 64,
+            "use_bias": true,
+            "name": "GC_Mobility",
+            "trainable": true
+          },
+          "inbound_nodes": [
+            [
+              ["dropout_Dropout10", 0, 0, {}],
+              ["squeezed_sparse_conversion_SqueezedSparseConversion2", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "GC_Rhythm",
+          "class_name": "GraphConvolution",
+          "config": {
+            "units": 64,
+            "use_bias": true,
+            "name": "GC_Rhythm",
+            "trainable": true
+          },
+          "inbound_nodes": [
+            [
+              ["dropout_Dropout11", 0, 0, {}],
+              ["squeezed_sparse_conversion_SqueezedSparseConversion2", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "Graph_Pool",
+          "class_name": "AggregationLayer",
+          "config": { "name": "Graph_Pool", "trainable": true },
+          "inbound_nodes": [
+            [
+              ["GC_LC", 0, 0, {}],
+              ["GC_POI", 0, 0, {}],
+              ["GC_Building", 0, 0, {}],
+              ["GC_Mobility", 0, 0, {}],
+              ["GC_Rhythm", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "dropout_Dropout12",
+          "class_name": "Dropout",
+          "config": {
+            "rate": 0.5,
+            "noise_shape": null,
+            "seed": null,
+            "name": "dropout_Dropout12",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Graph_Pool", 0, 0, {}]]]
+        },
+        {
+          "name": "GC_2",
+          "class_name": "GraphConvolution",
+          "config": {
+            "units": 64,
+            "use_bias": true,
+            "name": "GC_2",
+            "trainable": true
+          },
+          "inbound_nodes": [
+            [
+              ["dropout_Dropout12", 0, 0, {}],
+              ["squeezed_sparse_conversion_SqueezedSparseConversion2", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "Input_Out_Indices",
+          "class_name": "InputLayer",
+          "config": {
+            "batch_input_shape": [1, null],
+            "dtype": "int32",
+            "sparse": false,
+            "name": "Input_Out_Indices"
+          },
+          "inbound_nodes": []
+        },
+        {
+          "name": "Gather_Indices",
+          "class_name": "GatherIndices",
+          "config": {
+            "name": "Gather_Indices",
+            "trainable": false,
+            "batch_dims": 1
+          },
+          "inbound_nodes": [
+            [
+              ["GC_2", 0, 0, {}],
+              ["Input_Out_Indices", 0, 0, {}]
+            ]
+          ]
+        },
+        {
+          "name": "Prediction_Score",
+          "class_name": "Dense",
+          "config": {
+            "units": 6,
+            "activation": "linear",
+            "use_bias": true,
+            "kernel_initializer": {
+              "class_name": "VarianceScaling",
+              "config": {
+                "scale": 1,
+                "mode": "fan_avg",
+                "distribution": "normal",
+                "seed": null
+              }
+            },
+            "bias_initializer": { "class_name": "Zeros", "config": {} },
+            "kernel_regularizer": null,
+            "bias_regularizer": null,
+            "activity_regularizer": null,
+            "kernel_constraint": null,
+            "bias_constraint": null,
+            "name": "Prediction_Score",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Gather_Indices", 0, 0, {}]]]
+        },
+        {
+          "name": "Softmax_Activation",
+          "class_name": "Activation",
+          "config": {
+            "activation": "softmax",
+            "name": "Softmax_Activation",
+            "trainable": true
+          },
+          "inbound_nodes": [[["Prediction_Score", 0, 0, {}]]]
+        }
+      ],
+      "input_layers": [
+        ["Input_LC", 0, 0],
+        ["Input_POI", 0, 0],
+        ["Input_Building", 0, 0],
+        ["Input_Mobility", 0, 0],
+        ["Input_Rhythm", 0, 0],
+        ["Input_Adj_Indices", 0, 0],
+        ["Input_Adj_values", 0, 0],
+        ["Input_Out_Indices", 0, 0]
+      ],
+      "output_layers": [["Softmax_Activation", 0, 0]]
+    },
+    "keras_version": "tfjs-layers 3.11.0",
+    "backend": "tensor_flow.js"
+  },
+  "format": "layers-model",
+  "generatedBy": "TensorFlow.js tfjs-layers v3.11.0",
+  "convertedBy": null,
+  "weightsManifest": [
+    {
+      "paths": ["model.weights.bin"],
+      "weights": [
+        { "name": "Hidden_LC/kernel", "shape": [19, 50], "dtype": "float32" },
+        { "name": "Hidden_LC/bias", "shape": [50], "dtype": "float32" },
+        { "name": "Hidden_POI/kernel", "shape": [17, 50], "dtype": "float32" },
+        { "name": "Hidden_POI/bias", "shape": [50], "dtype": "float32" },
+        {
+          "name": "Hidden_Building/kernel",
+          "shape": [4, 50],
+          "dtype": "float32"
+        },
+        { "name": "Hidden_Building/bias", "shape": [50], "dtype": "float32" },
+        {
+          "name": "Hidden_Mobility/kernel",
+          "shape": [1514, 50],
+          "dtype": "float32"
+        },
+        { "name": "Hidden_Mobility/bias", "shape": [50], "dtype": "float32" },
+        {
+          "name": "Hidden_Rhythm/kernel",
+          "shape": [48, 50],
+          "dtype": "float32"
+        },
+        { "name": "Hidden_Rhythm/bias", "shape": [50], "dtype": "float32" },
+        { "name": "GC_LC/GC_LC_kernel", "shape": [50, 64], "dtype": "float32" },
+        {
+          "name": "GC_LC/GC_LC_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_LC/GC_LC_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_LC/GC_LC_bias", "shape": [64], "dtype": "float32" },
+        {
+          "name": "GC_POI/GC_POI_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_POI/GC_POI_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_POI/GC_POI_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_POI/GC_POI_bias", "shape": [64], "dtype": "float32" },
+        {
+          "name": "GC_Building/GC_Building_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Building/GC_Building_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Building/GC_Building_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Building/GC_Building_bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Mobility/GC_Mobility_bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_self_kernel",
+          "shape": [50, 64],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_Rhythm/GC_Rhythm_bias",
+          "shape": [64],
+          "dtype": "float32"
+        },
+        {
+          "name": "Graph_Pool/Graph_Pool_pool_kernel",
+          "shape": [320, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_2/GC_2_kernel", "shape": [64, 64], "dtype": "float32" },
+        {
+          "name": "GC_2/GC_2_self_loop_weight",
+          "shape": [1],
+          "dtype": "float32"
+        },
+        {
+          "name": "GC_2/GC_2_self_kernel",
+          "shape": [64, 64],
+          "dtype": "float32"
+        },
+        { "name": "GC_2/GC_2_bias", "shape": [64], "dtype": "float32" },
+        {
+          "name": "Prediction_Score/kernel",
+          "shape": [64, 6],
+          "dtype": "float32"
+        },
+        { "name": "Prediction_Score/bias", "shape": [6], "dtype": "float32" }
+      ]
+    }
+  ]
+}
