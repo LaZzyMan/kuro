@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "mapbox-gl/dist/mapbox-gl.css";
+import "@ant-design/flowchart/dist/index.css";
 
 ReactDOM.render(
   <React.StrictMode>

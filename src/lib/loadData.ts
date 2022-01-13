@@ -1,26 +1,42 @@
 import * as tf from "@tensorflow/tfjs";
-import "@tensorflow/tfjs-backend-webgl";
-import "@tensorflow/tfjs-backend-cpu";
+import centeroid from "@turf/centroid";
 
-export interface FeatureTensor {
-  inputs: tf.Tensor[];
-  output: tf.Tensor;
+export interface FeatureData {
+  featureLC: number[][];
+  featurePOI: number[][];
+  featureBuilding: number[][];
+  featureMobility: number[][];
+  featureRhythm: number[][];
+  adjIndices: number[][];
+  adjValue: number[];
+  trueLabel: string[];
+  defaultTrainSet: number[];
+}
+
+export interface Feature {
+  lc: number[];
+  poi: number[];
+  building: number[];
+  mobility: number[];
+  rhythm: number[];
 }
 
 export interface GeoJSONData {
   region: object;
+  center: number[][];
 }
 
 const featureUrls = [
-  "data/featureLC.bin",
-  "data/featurePOI.bin",
-  "data/featureBuilding.bin",
+  "data/featureLCRaw.bin",
+  "data/featurePOIRaw.bin",
+  "data/featureBuildingRaw.bin",
   "data/featureMobility.bin",
   "data/featureRhythm.bin",
   "data/adjIndices.bin",
   "data/adjValues.bin",
   "data/allOutIndices.bin",
   "data/allOutput.bin",
+  "data/trainSet.bin",
 ];
 
 const geojsonUrls = ["data/region.geojson"];
@@ -28,7 +44,7 @@ const geojsonUrls = ["data/region.geojson"];
 export async function loadFeatureTensor(
   downloadCallback: Function,
   parseCallback: Function
-): Promise<FeatureTensor> {
+): Promise<FeatureData> {
   return new Promise((resolve, reject) => {
     Promise.all(featureUrls.map((url) => fetch(process.env.PUBLIC_URL + url)))
       .then((responses) => {
@@ -39,55 +55,48 @@ export async function loadFeatureTensor(
       .then((responses) => {
         Promise.all(responses.map((r) => r.arrayBuffer())).then((datas) => {
           console.log("特征数据解析完成.");
-          const featureLC = tf.tensor3d(
-            new Float32Array(datas[0]),
-            [1, 1514, 19]
-          );
-          const featurePOI = tf.tensor3d(
-            new Float32Array(datas[1]),
-            [1, 1514, 17]
-          );
-          const featureBuilding = tf.tensor3d(
-            new Float32Array(datas[2]),
-            [1, 1514, 4]
-          );
-          const featureMobility = tf.tensor3d(
-            new Float32Array(datas[3]),
-            [1, 1514, 1514]
-          );
-          const featureRhythm = tf.tensor3d(
-            new Float32Array(datas[4]),
-            [1, 1514, 48]
-          );
-          const adjIndices = tf.tensor3d(
-            new Float32Array(datas[5]),
-            [1, 201690, 2],
-            "int32"
-          );
-          const adjValue = tf.tensor2d(new Float32Array(datas[6]), [1, 201690]);
-          const allOutIndices = tf.tensor2d(
-            new Float32Array(datas[7]),
-            [1, 1514],
-            "int32"
-          );
-          const allOutput = tf.tensor3d(
-            new Float32Array(datas[8]),
-            [1, 1514, 6],
-            "int32"
+          const featureLC = tf
+            .tensor2d(new Float32Array(datas[0]), [1514, 19])
+            .arraySync();
+          const featurePOI = tf
+            .tensor2d(new Float32Array(datas[1]), [1514, 17])
+            .arraySync();
+          const featureBuilding = tf
+            .tensor2d(new Float32Array(datas[2]), [1514, 4])
+            .arraySync();
+          const featureMobility = tf
+            .tensor2d(new Float32Array(datas[3]), [1514, 1514])
+            .arraySync();
+          const featureRhythm = tf
+            .tensor2d(new Float32Array(datas[4]), [1514, 48])
+            .arraySync();
+          const adjIndices = tf
+            .tensor2d(new Float32Array(datas[5]), [201690, 2], "int32")
+            .arraySync();
+          const adjValue = tf
+            .tensor2d(new Float32Array(datas[6]), [1, 201690])
+            .arraySync()[0];
+          const allOutput = tf
+            .tensor2d(new Float32Array(datas[8]), [1514, 6], "int32")
+            .arraySync();
+          const defaultTrainSet = Array.from(new Float32Array(datas[9]));
+          const trueLabel = Array.from({ length: 1514 }, (v, i) => i).map(
+            (i) => {
+              const classes = ["C", "G", "M", "P", "R", "U"];
+              return classes[allOutput[i].indexOf(1)];
+            }
           );
           setTimeout(parseCallback, 2000);
           resolve({
-            inputs: [
-              featureLC,
-              featurePOI,
-              featureBuilding,
-              featureMobility,
-              featureRhythm,
-              adjIndices,
-              adjValue,
-              allOutIndices,
-            ],
-            output: allOutput,
+            featureLC,
+            featurePOI,
+            featureBuilding,
+            featureMobility,
+            featureRhythm,
+            adjIndices,
+            adjValue,
+            trueLabel,
+            defaultTrainSet,
           });
         });
       });
@@ -109,8 +118,15 @@ export async function loadGeoJSONData(
         Promise.all(responses.map((r) => r.json())).then((datas) => {
           console.log("GeoJSON数据解析完成.");
           setTimeout(parseCallback, 4000);
+          (datas[0].features as Array<any>).sort(
+            (a, b) => a.properties.rid - b.properties.rid
+          );
+          const centers = datas[0].features.map(
+            (v: any) => centeroid(v).geometry.coordinates
+          );
           resolve({
             region: datas[0],
+            center: centers,
           });
         });
       });

@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState, useEffect } from "react";
 import { Chart } from "@antv/g2";
 import style from "./RegionBasicInfo.module.css";
+import { Feature } from "../lib/loadData";
 
 const landCoverTypes = [
   "rice paddy",
@@ -42,11 +43,11 @@ const poiTypes = [
   "famous tourist sites",
 ];
 
-const buildingTypes = ["PLAND", "BLSI", "floorMean", "floorStd"];
+// const buildingTypes = ["PLAND", "BLSI", "floorMean", "floorStd"];
 
 export interface RegionBasicInfoProps {
   regionData: any;
-  featureData: number[][] | null;
+  featureData: Feature | null;
 }
 
 const RegionBasicInfo: FC<RegionBasicInfoProps> = ({
@@ -196,7 +197,7 @@ const RegionBasicInfo: FC<RegionBasicInfoProps> = ({
     const lcData = landCoverTypes.map((type, i) => {
       return {
         type,
-        value: Math.floor(featureData[0][i] * 100),
+        value: Math.floor(featureData.lc[i] * 100),
       };
     });
     lcData.sort((a, b) => b.value - a.value);
@@ -209,7 +210,7 @@ const RegionBasicInfo: FC<RegionBasicInfoProps> = ({
     const poiData = poiTypes.map((type, i) => {
       return {
         type,
-        value: Math.floor(featureData[0][i] * 100),
+        value: Math.floor(featureData.lc[i] * 100),
       };
     });
     poiData.sort((a, b) => b.value - a.value);
@@ -224,14 +225,14 @@ const RegionBasicInfo: FC<RegionBasicInfoProps> = ({
       return {
         time: i + "h",
         type: "in",
-        value: Math.floor(featureData[4][i] * 100),
+        value: Math.floor(featureData.rhythm[i] * 100),
       };
     });
     let outData = timeArray.map((i) => {
       return {
         time: i + "h",
         type: "out",
-        value: Math.floor(featureData[4][i + 24] * 100),
+        value: Math.floor(featureData.rhythm[i + 24] * 100),
       };
     });
     rhythmChart.data(inData.concat(outData));

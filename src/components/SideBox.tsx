@@ -5,7 +5,7 @@ import { RightOutlined, LeftOutlined } from "@ant-design/icons";
 
 export interface SideBoxProps {
   status: "hide" | "show";
-  regionId: number | null;
+  regionId: number | undefined;
   children?: React.ReactElement;
 }
 

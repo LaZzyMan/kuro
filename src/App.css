@@ -38,3 +38,17 @@
     transform: rotate(360deg);
   }
 }
+
+.mapboxgl-ctrl-bottom-left {
+  width: 100%;
+}
+
+.flow-controller {
+  width: 100%;
+  background-color: rgba(200, 200, 200, 0.3);
+}
+
+.ant-spin-container {
+  height: 100%;
+  width: 100%;
+}

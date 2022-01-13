@@ -21,64 +21,47 @@ const LoadInfo: FC<LoadInfoProps> = ({
   fpStatus,
   gdStatus,
   gpStatus,
-  children,
 }: LoadInfoProps) => {
   return (
-    <div>
-      <div
-        className={style.stepContainer}
-        style={{ display: gpStatus === "finish" ? "none" : "block" }}
-      >
-        <div className={style.stepBox}>
-          <Steps className={style.steps}>
-            <Step
-              status={fdStatus}
-              title="下载特征数据"
-              icon={
-                fdStatus === "process" ? (
-                  <LoadingOutlined />
-                ) : (
-                  <CloudDownloadOutlined />
-                )
-              }
-            />
-            <Step
-              status={fpStatus}
-              title="解析特征数据"
-              icon={
-                fpStatus === "process" ? (
-                  <LoadingOutlined />
-                ) : (
-                  <CloudSyncOutlined />
-                )
-              }
-            />
-            <Step
-              status={gdStatus}
-              title="下载GeoJSON数据"
-              icon={
-                gdStatus === "process" ? (
-                  <LoadingOutlined />
-                ) : (
-                  <CloudDownloadOutlined />
-                )
-              }
-            />
-            <Step
-              status={gpStatus}
-              title="解析GeoJSON数据"
-              icon={
-                gpStatus === "process" ? (
-                  <LoadingOutlined />
-                ) : (
-                  <CloudSyncOutlined />
-                )
-              }
-            />
-          </Steps>
-        </div>
-      </div>
-      {children}
+    <div className={style.stepBox}>
+      <Steps className={style.steps}>
+        <Step
+          status={fdStatus}
+          title="下载特征数据"
+          icon={
+            fdStatus === "process" ? (
+              <LoadingOutlined />
+            ) : (
+              <CloudDownloadOutlined />
+            )
+          }
+        />
+        <Step
+          status={fpStatus}
+          title="解析特征数据"
+          icon={
+            fpStatus === "process" ? <LoadingOutlined /> : <CloudSyncOutlined />
+          }
+        />
+        <Step
+          status={gdStatus}
+          title="下载GeoJSON数据"
+          icon={
+            gdStatus === "process" ? (
+              <LoadingOutlined />
+            ) : (
+              <CloudDownloadOutlined />
+            )
+          }
+        />
+        <Step
+          status={gpStatus}
+          title="解析GeoJSON数据"
+          icon={
+            gpStatus === "process" ? <LoadingOutlined /> : <CloudSyncOutlined />
+          }
+        />
+      </Steps>
     </div>
   );
 };

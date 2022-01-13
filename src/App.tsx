@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import * as tf from "@tensorflow/tfjs";
-import KuroMap from "./components/KuroMap";
+import Mask from "./components/Mask";
+import KuroMap from "./components/maps/KuroMap";
 import LoadInfo from "./components/LoadInfo";
 import SideBox from "./components/SideBox";
 import Logo from "./components/Logo";
@@ -10,9 +10,10 @@ import RegionBasicInfo from "./components/RegionBasicInfo";
 import {
   loadFeatureTensor,
   loadGeoJSONData,
-  FeatureTensor,
+  FeatureData,
   GeoJSONData,
 } from "./lib/loadData";
+import useAdj from "./lib/useAdj";
 import "./App.css";
 
 function App() {
@@ -20,29 +21,24 @@ function App() {
   const [fpStatus, setFpStatus] = useState("wait");
   const [gdStatus, setGdStatus] = useState("wait");
   const [gpStatus, setGpStatus] = useState("wait");
-  const [featureTensor, setFeatureTensor] = useState({} as FeatureTensor);
+  const [featureData, setFeatureData] = useState({} as FeatureData);
   const [geoJSONData, setGeoJSONData] = useState(null as GeoJSONData | null);
   const [sideBoxStatus, setSideBoxStatus] = useState("hide" as "hide" | "show");
-  const [selectRegionId, setSelectRegionId] = useState(null as number | null);
+  const [selectRegionId, setSelectRegionId, adjMatrix] = useAdj(
+    "ws://127.0.0.1:5000/kuro"
+  );
   const [trainToolsVisible, setTrainToolsVisible] = useState(false);
-
-  const regionClickCallback = useCallback((regionId) => {
-    setSideBoxStatus("show");
-    setSelectRegionId(regionId);
-  }, []);
 
   const featureSelect = useMemo(() => {
     if (!selectRegionId) return null;
-    return featureTensor.inputs.map(
-      (feature) =>
-        tf
-          .squeeze(
-            tf.gather(feature, tf.tensor([selectRegionId], [1], "int32"), 1),
-            [0, 1]
-          )
-          .arraySync() as number[]
-    );
-  }, [featureTensor, selectRegionId]);
+    return {
+      lc: featureData.featureLC[selectRegionId],
+      poi: featureData.featurePOI[selectRegionId],
+      building: featureData.featureBuilding[selectRegionId],
+      mobility: featureData.featureMobility[selectRegionId],
+      rhythm: featureData.featureRhythm[selectRegionId],
+    };
+  }, [featureData, selectRegionId]);
 
   const trainToolsCloseCallback = useCallback(() => {
     setTrainToolsVisible(false);
@@ -51,6 +47,33 @@ function App() {
   const trainToolsOpenCallback = useCallback(() => {
     setTrainToolsVisible(true);
   }, []);
+
+  useEffect(() => {
+    if (!geoJSONData || !selectRegionId) return;
+    const centers = geoJSONData.center;
+    const op = geoJSONData.center[selectRegionId];
+    const inLineSeqs = adjMatrix.in.map((regions: any) => {
+      const degrees = Array.from({ length: 36 }, (_) => 0.0);
+      for (let i = 0; i < regions.length; i++) {
+        const dp = centers[i];
+        const degree =
+          (Math.atan2(dp[1] - op[1], dp[0] - op[0]) * 180) / Math.PI;
+        degrees[Math.floor(degree / 10)] += regions[i];
+      }
+      return degrees;
+    });
+    const outLineSeqs = adjMatrix.out.map((regions: any) => {
+      const degrees = new Array(36).map((_) => 0.0);
+      for (let i = 0; i < regions.length; i++) {
+        const dp = centers[i];
+        let degree = (Math.atan2(dp[1] - op[1], dp[0] - op[0]) * 180) / Math.PI;
+        if (degree < 0) degree += 360;
+        degrees[Math.floor(degree / 10)] += regions[i];
+      }
+      return degrees;
+    });
+    console.log(inLineSeqs, outLineSeqs);
+  }, [adjMatrix]);
 
   useEffect(() => {
     async function load() {
@@ -75,7 +98,7 @@ function App() {
           setGpStatus("finish");
         }
       );
-      setFeatureTensor(ft);
+      setFeatureData(ft);
       setGeoJSONData(gd);
     }
     load();
@@ -84,24 +107,30 @@ function App() {
   return (
     <div className="App">
       <Logo />
-      <LoadInfo
-        fdStatus={fdStatus as any}
-        fpStatus={fpStatus as any}
-        gdStatus={gdStatus as any}
-        gpStatus={gpStatus as any}
+      <Mask
+        visible={gpStatus !== "finish"}
+        content={
+          <LoadInfo
+            fdStatus={fdStatus as any}
+            fpStatus={fpStatus as any}
+            gdStatus={gdStatus as any}
+            gpStatus={gpStatus as any}
+          />
+        }
       >
         <div>
           <SideBox status={sideBoxStatus} regionId={selectRegionId}>
             <RegionBasicInfo regionData featureData={featureSelect} />
           </SideBox>
-          <KuroMap data={geoJSONData} onRegionClick={regionClickCallback} />
+          <KuroMap data={geoJSONData} featureData={featureData} onSelect={(feature) => {}} />
           <TrainTools
             onClose={trainToolsCloseCallback}
             visible={trainToolsVisible}
+            trainSet={featureData.defaultTrainSet}
           />
           <ToolBox onTrainToolsClick={trainToolsOpenCallback} />
         </div>
-      </LoadInfo>
+      </Mask>
     </div>
   );
 }
