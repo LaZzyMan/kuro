@@ -34,19 +34,13 @@ const prevLineArc = d3
   .outerRadius((d: any) => d.prevRadius);
 
 const FlowChart: FC<Props> = ({ size, data, time }) => {
-  const centerRadius = useMemo(() => (size * 0.9 * 5) / 12, [size]);
-  const maxOuterRadius = useMemo(
-    () => centerRadius + size * 0.2,
-    [centerRadius, size]
-  );
+  const centerRadius = useMemo(() => (size * 7) / 20, [size]);
+  const maxOuterRadius = useMemo(() => size / 2, [size]);
   const minOuterRadius = useMemo(
     () => centerRadius + size * 0.01,
     [centerRadius, size]
   );
-  const maxInnerRadius = useMemo(
-    () => centerRadius - size * 0.2,
-    [centerRadius, size]
-  );
+  const maxInnerRadius = useMemo(() => size / 5, [size]);
   const minInnerRadius = useMemo(
     () => centerRadius - size * 0.01,
     [centerRadius, size]
@@ -61,9 +55,9 @@ const FlowChart: FC<Props> = ({ size, data, time }) => {
     (currentData) => {
       const svg = d3
         .create("svg")
-        .attr("width", size * 2)
-        .attr("height", size * 2)
-        .attr("viewBox", [(-size * 3) / 4, -size / 2, (size * 3) / 2, size])
+        .attr("width", size)
+        .attr("height", size)
+        .attr("viewBox", [-size / 2, -size / 2, size, size])
         .attr("style", "max-width: 100%;")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round");

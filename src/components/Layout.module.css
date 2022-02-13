@@ -1,0 +1,44 @@
+.mainView {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.leftView {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rightView {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.leftTopView {
+  width: 100%;
+  height: 70%;
+  background-color: aquamarine;
+}
+
+.leftBottomView {
+  width: 100%;
+  height: 30%;
+  background-color: brown;
+}
+
+.rightTopView {
+  width: 100%;
+  height: 70%;
+  background-color: chocolate;
+}
+
+.rightBottomView {
+  width: 100%;
+  height: 30%;
+  background-color: cornflowerblue;
+}

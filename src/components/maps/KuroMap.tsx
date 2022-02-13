@@ -11,7 +11,7 @@ import Marker from "./Marker";
 import Control from "./Control";
 import RegionLayer from "./RegionLayer";
 import bbox from "@turf/bbox";
-import centeroid from "@turf/centroid";
+import center from "@turf/center";
 import distance from "@turf/distance";
 import { GeoJSONData, FeatureData } from "../../lib/loadData";
 import mapboxgl from "mapbox-gl";
@@ -55,7 +55,7 @@ const KuroMap: FC<KuroMapProps> = ({
   const [menuSelected, setMenuSelected] = useState(
     "lc" as "lc" | "poi" | "building" | "traj"
   );
-  const [center, setCenter] = useState([0, 0]);
+  const [regionCenter, setRegionCenter] = useState([0, 0]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [box, setBox] = useState([0, 0, 0, 0]);
   const [rid, setRid, adjMatrix] = useAdj("ws://127.0.0.1:5000/kuro");
@@ -68,6 +68,9 @@ const KuroMap: FC<KuroMapProps> = ({
     out: [] as number[],
   });
   const [chartSize, setChartSize] = useState(0);
+  const [targetRids, setTargetRids] = useState(
+    undefined as number[] | undefined
+  );
 
   const animate = () => {
     const t =
@@ -109,7 +112,7 @@ const KuroMap: FC<KuroMapProps> = ({
   const regionClickHandler = useCallback(
     (feature: any) => {
       setBox(bbox(feature));
-      setCenter(centeroid(feature).geometry.coordinates);
+      setRegionCenter(center(feature).geometry.coordinates);
       setStatus("menu");
       setRid(feature.properties.rid);
       onSelect(feature.properties.rid);
@@ -236,6 +239,10 @@ const KuroMap: FC<KuroMapProps> = ({
     setIsBrush(false);
   }, []);
 
+  const brushBarHoverHandler = useCallback((rids) => {
+    setTargetRids(rids);
+  }, []);
+
   const zoomHandler = useCallback(
     (map, e) => {
       setBox((prev: any) => {
@@ -243,7 +250,7 @@ const KuroMap: FC<KuroMapProps> = ({
         const lt = map.project([prev[0], prev[1]]);
         const rb = map.project([prev[2], prev[3]]);
         const l = Math.sqrt((lt.x - rb.x) ** 2 + (lt.y - rb.y) ** 2);
-        setChartSize(Math.ceil(l));
+        setChartSize(Math.ceil(l) * 1.5);
         return prev;
       });
     },
@@ -256,8 +263,8 @@ const KuroMap: FC<KuroMapProps> = ({
         // eslint-disable-next-line react/style-prop-object
         style="mapbox://styles/hideinme/cj9ydelgj7jlo2su9opjkbjsu"
         containerStyle={{
-          height: "100vh",
-          width: "100vw",
+          height: "100%",
+          width: "100%",
         }}
         maxBounds={new mapboxgl.LngLatBounds([73.66, 3.86], [135.05, 53.55])}
         onDblClick={dblClickHandler}
@@ -271,23 +278,15 @@ const KuroMap: FC<KuroMapProps> = ({
                 data={data?.region}
                 onClick={regionClickHandler}
                 status={status}
+                targetRids={targetRids}
               />
               <Marker
                 pitchAlignment="map"
                 rotationAlignment="map"
-                lngLat={center as [number, number]}
+                lngLat={regionCenter as [number, number]}
               >
                 {status === "menu" ? (
-                  <MenuChart
-                    size={
-                      chartSize * 2
-                      // Math.min(
-                      //   map!.getContainer().offsetHeight,
-                      //   map!.getContainer().offsetWidth
-                      // ) - 200
-                    }
-                    onClick={menuClickHandler}
-                  />
+                  <MenuChart size={chartSize} onClick={menuClickHandler} />
                 ) : status === "detail" ? (
                   menuSelected === "traj" ? (
                     isBrush ? (
@@ -296,38 +295,21 @@ const KuroMap: FC<KuroMapProps> = ({
                         map={map}
                         centers={data?.center}
                         data={brushData}
-                        size={
-                          chartSize * 2
-                          // Math.min(
-                          //   map!.getContainer().offsetHeight,
-                          //   map!.getContainer().offsetWidth
-                          // ) - 200
-                        }
+                        size={chartSize}
                         times={brushTime}
+                        onBarHover={brushBarHoverHandler}
                       />
                     ) : (
-                      <FlowChart
-                        data={flowData}
-                        size={
-                          chartSize * 2
-                          // Math.min(
-                          //   map!.getContainer().offsetHeight,
-                          //   map!.getContainer().offsetWidth
-                          // ) - 200
-                        }
-                        time={time}
-                      />
+                      <FlowChart data={flowData} size={chartSize} time={time} />
                     )
                   ) : (
                     <FeatureChart
-                      data={featureData!.featureLC[rid!].slice(0, -1)}
-                      size={
-                        chartSize * 2
-                        // Math.min(
-                        //   map!.getContainer().offsetHeight,
-                        //   map!.getContainer().offsetWidth
-                        // ) - 200
+                      data={
+                        menuSelected === "lc"
+                          ? featureData!.featureLC[rid!].slice(0, -1)
+                          : featureData!.featurePOI[rid!].slice(0, -1)
                       }
+                      size={chartSize}
                       type={menuSelected as "lc" | "poi"}
                     />
                   )

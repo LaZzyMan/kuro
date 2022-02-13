@@ -1,14 +1,10 @@
-import * as tf from "@tensorflow/tfjs";
 import centeroid from "@turf/centroid";
+import { chunk } from "lodash";
 
 export interface FeatureData {
   featureLC: number[][];
   featurePOI: number[][];
   featureBuilding: number[][];
-  featureMobility: number[][];
-  featureRhythm: number[][];
-  adjIndices: number[][];
-  adjValue: number[];
   trueLabel: string[];
   defaultTrainSet: number[];
 }
@@ -17,8 +13,6 @@ export interface Feature {
   lc: number[];
   poi: number[];
   building: number[];
-  mobility: number[];
-  rhythm: number[];
 }
 
 export interface GeoJSONData {
@@ -30,11 +24,6 @@ const featureUrls = [
   "data/featureLCRaw.bin",
   "data/featurePOIRaw.bin",
   "data/featureBuildingRaw.bin",
-  "data/featureMobility.bin",
-  "data/featureRhythm.bin",
-  "data/adjIndices.bin",
-  "data/adjValues.bin",
-  "data/allOutIndices.bin",
   "data/allOutput.bin",
   "data/trainSet.bin",
 ];
@@ -55,31 +44,11 @@ export async function loadFeatureTensor(
       .then((responses) => {
         Promise.all(responses.map((r) => r.arrayBuffer())).then((datas) => {
           console.log("特征数据解析完成.");
-          const featureLC = tf
-            .tensor2d(new Float32Array(datas[0]), [1514, 19])
-            .arraySync();
-          const featurePOI = tf
-            .tensor2d(new Float32Array(datas[1]), [1514, 17])
-            .arraySync();
-          const featureBuilding = tf
-            .tensor2d(new Float32Array(datas[2]), [1514, 4])
-            .arraySync();
-          const featureMobility = tf
-            .tensor2d(new Float32Array(datas[3]), [1514, 1514])
-            .arraySync();
-          const featureRhythm = tf
-            .tensor2d(new Float32Array(datas[4]), [1514, 48])
-            .arraySync();
-          const adjIndices = tf
-            .tensor2d(new Float32Array(datas[5]), [201690, 2], "int32")
-            .arraySync();
-          const adjValue = tf
-            .tensor2d(new Float32Array(datas[6]), [1, 201690])
-            .arraySync()[0];
-          const allOutput = tf
-            .tensor2d(new Float32Array(datas[8]), [1514, 6], "int32")
-            .arraySync();
-          const defaultTrainSet = Array.from(new Float32Array(datas[9]));
+          const featureLC = chunk(new Float32Array(datas[0]), 19);
+          const featurePOI = chunk(new Float32Array(datas[1]), 16);
+          const featureBuilding = chunk(new Float32Array(datas[2]), 4);
+          const allOutput = chunk(new Float32Array(datas[3]), 6);
+          const defaultTrainSet = Array.from(new Float32Array(datas[4]));
           const trueLabel = Array.from({ length: 1514 }, (v, i) => i).map(
             (i) => {
               const classes = ["C", "G", "M", "P", "R", "U"];
@@ -91,10 +60,6 @@ export async function loadFeatureTensor(
             featureLC,
             featurePOI,
             featureBuilding,
-            featureMobility,
-            featureRhythm,
-            adjIndices,
-            adjValue,
             trueLabel,
             defaultTrainSet,
           });

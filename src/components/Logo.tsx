@@ -10,10 +10,10 @@ const Logo: FC = () => {
           zIndex: 20,
           position: "absolute",
           top: 0,
-          left: 0,
+          right: 0,
           borderStyle: "solid",
           borderWidth: "80px 80px 80px 80px",
-          borderColor: "gray  transparent transparent gray",
+          borderColor: "#91C483 #91C483 transparent transparent",
         }}
       />
       <div
@@ -23,9 +23,9 @@ const Logo: FC = () => {
           zIndex: 21,
           position: "absolute",
           top: 0,
-          left: 0,
+          right: 0,
           marginTop: "30px",
-          marginLeft: "10px",
+          marginRight: "10px",
           color: "white",
         }}
       >

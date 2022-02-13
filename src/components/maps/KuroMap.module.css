@@ -1,17 +1,17 @@
 .buttonBox {
-    position: absolute;
-    top: 75%;
-    right: 0;
-    z-index: 999;
+  position: absolute;
+  top: 52%;
+  right: 0;
+  z-index: 999;
 }
 
 .buttonBox button {
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-top: 10px;
-    background-color: transparent;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  background-color: transparent;
 }
 
 .buttonBox button :hover {
-    fill: #EA5C2B
+  fill: #ea5c2b;
 }

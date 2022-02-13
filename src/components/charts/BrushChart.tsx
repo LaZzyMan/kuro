@@ -15,6 +15,7 @@ export interface Props {
     in: number[];
     out: number[];
   };
+  onBarHover: (rids?: number[]) => void;
 }
 
 const distanceSlice = (data: any) => {
@@ -53,11 +54,12 @@ const BrushChart: FC<Props> = ({
   centers,
   map,
   regionId,
+  onBarHover,
 }) => {
-  const centerRadius = (size * 0.9 * 5) / 12;
-  const maxOuterRadius = centerRadius + size * 0.2;
+  const centerRadius = (size * 7) / 20;
+  const maxOuterRadius = size / 2;
   const minOuterRadius = centerRadius + 1;
-  const maxInnerRadius = centerRadius - size * 0.2;
+  const maxInnerRadius = size / 5;
   const minInnerRadius = centerRadius - 1;
 
   const maxInValue = useMemo(
@@ -79,14 +81,23 @@ const BrushChart: FC<Props> = ({
     [data]
   );
 
-  const inScale = d3
-    .scaleLinear()
-    .domain([0, maxInValue])
-    .range([minInnerRadius, maxInnerRadius]);
-  const outScale = d3
-    .scaleLinear()
-    .domain([0, maxOutValue])
-    .range([minOuterRadius, maxOuterRadius]);
+  const inScale = useMemo(
+    () =>
+      d3
+        .scaleLinear()
+        .domain([0, maxInValue])
+        .range([minInnerRadius, maxInnerRadius]),
+    [maxInValue, maxInnerRadius, minInnerRadius]
+  );
+
+  const outScale = useMemo(
+    () =>
+      d3
+        .scaleLinear()
+        .domain([0, maxOutValue])
+        .range([minOuterRadius, maxOuterRadius]),
+    [maxOutValue, minOuterRadius, maxOuterRadius]
+  );
 
   const zeroData = useMemo(() => {
     const tmp = {
@@ -134,7 +145,7 @@ const BrushChart: FC<Props> = ({
       .create("svg")
       .attr("width", map!.getContainer().offsetWidth)
       .attr("height", map!.getContainer().offsetHeight)
-      .attr("viewBox", [(-size * 3) / 4, -size / 2, (size * 3) / 2, size])
+      .attr("viewBox", [-size / 2, -size / 2, size, size])
       .attr("style", "max-width: 100%;")
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
@@ -319,6 +330,7 @@ const BrushChart: FC<Props> = ({
             );
         });
 
+      // 显示具体去向轨迹
       const showDetailLines = (i: any, mode: "in" | "out") => {
         const line = d3
           .line()
@@ -344,6 +356,9 @@ const BrushChart: FC<Props> = ({
         );
         // 按方向角排序防止遮挡
         uniqRids.sort((a, b) => b.degree - a.degree);
+
+        // 更新地图显示
+        onBarHover(uniqRids.map((v: any) => v.rid));
 
         targets = uniqRids.map(({ rid, degree }) => {
           const dp = map.project(centers[rid]);
@@ -413,6 +428,7 @@ const BrushChart: FC<Props> = ({
         inBar.attr("fill", "");
         outBar.attr("display", "block");
         chart.lines.attr("display", "none");
+        onBarHover();
       });
 
       outBar.on("mouseover", (e, i: any) => {
@@ -425,9 +441,11 @@ const BrushChart: FC<Props> = ({
         outBar.attr("fill", "");
         inBar.attr("display", "block");
         chart.lines.attr("display", "none");
+        onBarHover();
       });
       return stackData;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     data,
     times,
@@ -435,11 +453,11 @@ const BrushChart: FC<Props> = ({
     centers,
     chart,
     inScale,
+    outScale,
     load,
     map,
     minInnerRadius,
     minOuterRadius,
-    outScale,
     regionId,
   ]);
   return <div ref={ref} />;

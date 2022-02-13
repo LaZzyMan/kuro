@@ -63,8 +63,9 @@ const FeatureChart: FC<Props> = ({ size, data, type }) => {
     const svg = d3
       .create("svg")
       .attr("width", size * 1.5)
+      .attr("height", size)
       .attr("viewBox", [(-size * 3) / 4, -size / 2, (size * 3) / 2, size])
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+      .attr("style", "max-width: 100%; height: auto;");
 
     const arcs = svg
       .append("g")
@@ -149,9 +150,9 @@ const FeatureChart: FC<Props> = ({ size, data, type }) => {
       .attr("font-family", "sans-serif")
       .attr("stroke-width", 1)
       .attr("stroke-opacity", 0)
-      .attr("stroke", "black")
+      .attr("stroke", "none")
       .attr("fill", "black")
-      .attr("font-size", 20)
+      .attr("font-size", size * 0.03)
       .selectAll("text")
       .data(labelData)
       .join("text")

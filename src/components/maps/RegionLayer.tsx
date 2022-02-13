@@ -1,4 +1,11 @@
-import React, { useCallback, useState, FC, Fragment, useContext } from "react";
+import React, {
+  useCallback,
+  useState,
+  FC,
+  Fragment,
+  useContext,
+  useMemo,
+} from "react";
 import bbox from "@turf/bbox";
 import { Layer, Source, MapContext } from "react-mapbox-gl";
 
@@ -6,6 +13,7 @@ export interface RegionLayerProps {
   data: any;
   onClick: Function;
   status: "normal" | "menu" | "detail";
+  targetRids?: number[];
 }
 
 const nullGeojson = {
@@ -17,11 +25,24 @@ const nullGeojson = {
   properties: {},
 };
 
-const RegionLayer: FC<RegionLayerProps> = ({ data, status, onClick }) => {
+const RegionLayer: FC<RegionLayerProps> = ({
+  data,
+  status,
+  onClick,
+  targetRids,
+}) => {
   const map = useContext(MapContext);
   const [selectedFeature, setSelectedFeature] = useState(nullGeojson);
   const [hoverFeature, setHoverFeature] = useState(nullGeojson);
   const [buildingFeatures, setBuildingFeatures] = useState(nullGeojson);
+
+  const targetFeatures = useMemo(() => {
+    if (!targetRids) return nullGeojson;
+    const targets = (data as any).features.filter(
+      (v: any) => targetRids.indexOf(v.properties.rid) !== -1
+    );
+    return Object.assign({}, data, { features: targets });
+  }, [targetRids, data]);
 
   const clickHandler = useCallback(
     (e: any) => {
@@ -41,7 +62,20 @@ const RegionLayer: FC<RegionLayerProps> = ({ data, status, onClick }) => {
       onClick(feature);
 
       let bounds: any = bbox(feature);
-      map!.fitBounds(bounds, { padding: 300 });
+      map!.fitBounds(bounds, {
+        padding:
+          Math.min(
+            map!.getContainer().offsetHeight,
+            map!.getContainer().offsetWidth
+          ) * 0.35,
+        offset: [
+          0,
+          -Math.min(
+            map!.getContainer().offsetHeight,
+            map!.getContainer().offsetWidth
+          ) * 0.06,
+        ],
+      });
       bounds = [
         [bounds[0], bounds[1]],
         [bounds[2], bounds[3]],
@@ -104,6 +138,13 @@ const RegionLayer: FC<RegionLayerProps> = ({ data, status, onClick }) => {
         }}
       />
       <Source
+        id="targetPolygon"
+        geoJsonSource={{
+          type: "geojson",
+          data: targetFeatures,
+        }}
+      />
+      <Source
         id="selectedBuilding"
         geoJsonSource={{
           type: "geojson",
@@ -141,11 +182,23 @@ const RegionLayer: FC<RegionLayerProps> = ({ data, status, onClick }) => {
           "line-color": "#541212",
           "line-opacity": 0.8,
           "line-dasharray": [2, 1],
-          "line-width": 5,
+          "line-width": 3,
         }}
         layout={{
           "line-join": "round",
           visibility: status === "normal" ? "none" : "visible",
+        }}
+      />
+      <Layer
+        id="detailTargetRegion"
+        sourceId="targetPolygon"
+        type="fill"
+        paint={{
+          "fill-color": "red",
+          "fill-opacity": 0.6,
+        }}
+        layout={{
+          visibility: status === "detail" ? "visible" : "none",
         }}
       />
       <Layer

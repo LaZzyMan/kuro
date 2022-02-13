@@ -10,12 +10,9 @@ export interface Props {
 
 const MenuChart: FC<Props> = ({ size, onClick }) => {
   const create = useCallback(() => {
-    const innerRadius = (size * 0.9) / 3;
-    const outerRadius = (size * 0.9) / 2;
+    const innerRadius = (size / 3) * 0.9;
+    const outerRadius = (size / 2) * 0.9;
     const labelRadius = (innerRadius + outerRadius) / 2;
-    const stroke = innerRadius > 0 ? "none" : "white";
-    const strokeWidth = 1;
-    const strokeLinejoin = "round";
 
     const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius);
     const arcLabel = d3.arc().innerRadius(labelRadius).outerRadius(labelRadius);
@@ -38,13 +35,12 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
       .attr("width", size)
       .attr("height", size)
       .attr("viewBox", [-size / 2, -size / 2, size, size])
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+      .attr("style", "max-width: 100%; height: auto;");
 
     const arcs = svg
       .append("g")
-      .attr("stroke", stroke)
-      .attr("stroke-width", strokeWidth)
-      .attr("stroke-linejoin", strokeLinejoin)
+      .attr("stroke", "none")
+      .attr("stroke-linejoin", "round")
       .selectAll("path")
       .data(arcData)
       .join("path")
@@ -71,7 +67,7 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
       .attr("font-family", "sans-serif")
       .attr("stroke", "white")
       .attr("fill", "white")
-      .attr("font-size", 28)
+      .attr("font-size", size * 0.05)
       .attr("text-anchor", "middle")
       .selectAll("text")
       .data(datasets)
@@ -111,9 +107,9 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
           var midAngle = (d.startAngle + d._endAngle) / 2;
           return (
             "translate(" +
-            size * 0.05 * Math.sin(midAngle) +
+            size * 0.04 * Math.sin(midAngle) +
             "," +
-            -size * 0.05 * Math.cos(midAngle) +
+            -size * 0.04 * Math.cos(midAngle) +
             ")"
           );
         });
@@ -126,9 +122,9 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
           var midAngle = (d.startAngle + d.endAngle) / 2;
           return (
             "translate(" +
-            (size * 0.05 * Math.sin(midAngle) + origin[0]) +
+            (size * 0.04 * Math.sin(midAngle) + origin[0]) +
             "," +
-            (-size * 0.05 * Math.cos(midAngle) + origin[1]) +
+            (-size * 0.04 * Math.cos(midAngle) + origin[1]) +
             ")"
           );
         });
