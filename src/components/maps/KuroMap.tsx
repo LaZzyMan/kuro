@@ -29,7 +29,7 @@ import { isEqual } from "lodash";
 export interface KuroMapProps {
   data: GeoJSONData | null;
   featureData: FeatureData | null;
-  onSelect: (rid: number) => void;
+  onSelect: (rid: number | null) => void;
   child?: React.ReactElement;
 }
 
@@ -120,20 +120,24 @@ const KuroMap: FC<KuroMapProps> = ({
     [onSelect, setRid]
   );
 
-  const dblClickHandler = useCallback((_, e: any) => {
-    setStatus((prev) => {
-      if (prev === "normal") return "normal";
-      else if (prev === "menu") {
-        setChartSize(0);
-        setBox([0, 0, 0, 0]);
-        return "normal";
-      } else {
-        setMenuSelected("lc");
-        return "menu";
-      }
-    });
-    e.preventDefault();
-  }, []);
+  const dblClickHandler = useCallback(
+    (_, e: any) => {
+      setStatus((prev) => {
+        if (prev === "normal") return "normal";
+        else if (prev === "menu") {
+          setChartSize(0);
+          setBox([0, 0, 0, 0]);
+          onSelect(null);
+          return "normal";
+        } else {
+          setMenuSelected("lc");
+          return "menu";
+        }
+      });
+      e.preventDefault();
+    },
+    [onSelect]
+  );
 
   const menuClickHandler = useCallback((i: number) => {
     if (i === 0) {

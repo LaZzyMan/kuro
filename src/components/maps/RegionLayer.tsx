@@ -6,6 +6,7 @@ import React, {
   useContext,
   useMemo,
 } from "react";
+import { AppContext } from "../../AppReducer";
 import bbox from "@turf/bbox";
 import { Layer, Source, MapContext } from "react-mapbox-gl";
 
@@ -31,10 +32,61 @@ const RegionLayer: FC<RegionLayerProps> = ({
   onClick,
   targetRids,
 }) => {
+  const { state } = useContext(AppContext);
+  const {
+    displayTrainSet,
+    currentTrainSet,
+    displayMode,
+    selectedTrainName,
+    trainList,
+  } = state;
   const map = useContext(MapContext);
   const [selectedFeature, setSelectedFeature] = useState(nullGeojson);
   const [hoverFeature, setHoverFeature] = useState(nullGeojson);
   const [buildingFeatures, setBuildingFeatures] = useState(nullGeojson);
+
+  const trainSet = useMemo(() => {
+    if (displayTrainSet.length === 0) {
+      return currentTrainSet.map((v) => v.rid);
+    } else {
+      return displayTrainSet.map((v) => v.rid);
+    }
+  }, [currentTrainSet, displayTrainSet]);
+
+  const displayResult = useMemo(() => {
+    if (displayMode === "result" && selectedTrainName) {
+      return trainList.filter((v) => v.name === selectedTrainName)[0].result
+        .pred;
+    } else {
+      return null;
+    }
+  }, [displayMode, trainList, selectedTrainName]);
+
+  const displayData = useMemo(() => {
+    if (displayResult) {
+      return {
+        ...data,
+        features: data.features.map((v) => ({
+          ...v,
+          properties: {
+            ...v.properties,
+            class: displayResult[v.properties.rid],
+          },
+        })),
+      };
+    } else {
+      return {
+        ...data,
+        features: data.features.map((v) => ({
+          ...v,
+          properties: {
+            ...v.properties,
+            inTrainSet: v.properties.rid in trainSet ? "in" : "out",
+          },
+        })),
+      };
+    }
+  }, [trainSet, data, displayResult]);
 
   const targetFeatures = useMemo(() => {
     if (!targetRids) return nullGeojson;
@@ -109,9 +161,11 @@ const RegionLayer: FC<RegionLayerProps> = ({
       const feature: any = (data as any).features.filter(
         (v: any) => v.properties.rid === rid
       )[0];
+      feature.properties.inTrainSet =
+        feature.properties.rid in trainSet ? "in" : "out";
       setHoverFeature(feature);
     },
-    [data, map]
+    [data, map, trainSet]
   );
 
   return (
@@ -120,7 +174,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
         id="regionPolygon"
         geoJsonSource={{
           type: "geojson",
-          data,
+          data: displayData,
         }}
       />
       <Source
@@ -155,7 +209,37 @@ const RegionLayer: FC<RegionLayerProps> = ({
         id="basicRegion"
         sourceId="regionPolygon"
         type="fill"
-        paint={{ "fill-color": "#0080ff", "fill-opacity": 0.6 }}
+        paint={{
+          "fill-color":
+            displayMode === "trainSet"
+              ? [
+                  "match",
+                  ["get", "inTrainSet"],
+                  "out",
+                  "#0080ff",
+                  "in",
+                  "#ff0000",
+                  "#ff0000",
+                ]
+              : [
+                  "match",
+                  ["get", "class"],
+                  "C",
+                  "#ef476f",
+                  "G",
+                  "#06d6a0",
+                  "M",
+                  "#073b4c",
+                  "P",
+                  "#ffd166",
+                  "R",
+                  "#118ab2",
+                  "U",
+                  "#8338ec",
+                  "#ffffff",
+                ],
+          "fill-opacity": 0.6,
+        }}
         onClick={clickHandler}
         onMouseMove={mousemoveHandler}
         layout={{
@@ -167,7 +251,15 @@ const RegionLayer: FC<RegionLayerProps> = ({
         sourceId="hoverPolygon"
         type="fill"
         paint={{
-          "fill-color": "#0080ff",
+          "fill-color": [
+            "match",
+            ["get", "inTrainSet"],
+            "out",
+            "#0080ff",
+            "in",
+            "#ff0000",
+            "#ff0000",
+          ],
           "fill-opacity": 0.8,
         }}
         layout={{

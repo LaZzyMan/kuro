@@ -1,0 +1,54 @@
+.container {
+    height: 100%;
+    width: 100%;
+}
+.trainParam {
+    height: 50%;
+    width: 100%;
+    border-bottom: 2px solid #efefef;
+}
+.trainList {
+    height: 50%;
+    width: 100%;
+}
+.paramText {
+    width: 60%;
+    text-align: center;
+    align-self: center;
+}
+
+.paramInput {
+    width: 30%;
+}
+
+.paramContainer {
+    display: flex;
+    margin-top: 8px;
+}
+.paramTitle {
+    text-align: left;
+    font-weight: bold;
+    padding-left: 5%;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    margin-top: 8px;
+    font-size: 16px;
+    border-bottom: 2px solid #efefef;
+}
+.trainListTitle{
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 5%;
+    font-size: 16px;
+    height: 10%;
+}
+
+.spin{
+    width: 100%;
+}
+
+.spin i {
+    background-color: #91C483;
+}

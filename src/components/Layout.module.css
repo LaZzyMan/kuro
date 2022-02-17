@@ -7,7 +7,7 @@
 
 .leftView {
   width: 20%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -21,14 +21,14 @@
 
 .leftTopView {
   width: 100%;
-  height: 70%;
-  background-color: aquamarine;
+  height: 55%;
+  background-color: white;
 }
 
 .leftBottomView {
   width: 100%;
-  height: 30%;
-  background-color: brown;
+  height: 45%;
+  background-color: white;
 }
 
 .rightTopView {

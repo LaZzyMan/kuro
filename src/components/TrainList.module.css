@@ -1,0 +1,60 @@
+.handle {
+    background: linear-gradient(180deg,#1890ff,#1890ff 20%,#fff 0,#fff 40%,#1890ff 0,#1890ff 60%,#fff 0,#fff 80%,#1890ff 0,#1890ff);
+    display: block;
+    width: 20px;
+    height: 16px;
+    opacity: .9;
+    margin-right: 5%;
+    margin-left: 5%;
+    cursor: row-resize;
+}
+
+.item {
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #efefef;
+    box-sizing: border-box;
+    user-select: none;
+    color: #333;
+    font-weight: 400;
+    background-color: white;
+}
+
+.itemDetail {
+    height: 80%;
+    background-color: #eefefe;
+    border-bottom: 2px solid #efefef;
+}
+
+.list {
+    width: 100%;
+    height: 90%;
+    overflow: auto;
+    background-color: #f3f3f3;
+    border-top: 1px solid #efefef;
+    border-bottom: 1px solid #efefef;
+    border-radius: 2px;
+    outline: none;
+}
+
+.itemButtonArea{
+}
+
+.titleLine {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 10px;
+}
+
+.contentLine {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 5px;
+}

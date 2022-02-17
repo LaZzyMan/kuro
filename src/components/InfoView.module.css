@@ -1,0 +1,71 @@
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+.trainSetTitle{
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 5%;
+    font-size: 16px;
+    height: 10%;
+    border-bottom: 2px solid #efefef;
+}
+
+.trainSet {
+    height: 60%;
+    width: 100%;
+}
+
+.regionInfo {
+    padding-top: 8px;
+    width: 100%;
+    height: 40%;
+    border-bottom: 2px solid #efefef;
+}
+
+.regionInfoTitle {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-weight: bold;
+    padding-left: 5%;
+    font-size: 16px;
+    height: 15%;
+    border-bottom: 2px solid #efefef;
+}
+
+.switchCircle {
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    border-width: 0px;
+    border-style: solid;
+}
+
+.switchCircle:hover {
+    filter: brightness(0.8) drop-shadow(1px 1px 1px black);
+}
+
+.switchCircleSelected {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #ccc;
+}
+
+.switchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 10%;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    height:30px;
+}

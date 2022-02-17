@@ -3,14 +3,38 @@ import io from "socket.io-client";
 
 type TrainStatus = "initial" | "load" | "train" | "pred" | "finish";
 
+export interface Params {
+  embeddingSize: number;
+  gcnSize1: number;
+  gcnSize2: number;
+  dropout: number;
+  lr: number;
+  wd: number;
+}
+
 export default function useTrainModel(
   url: string,
   initTrainSet?: number[]
-): [TrainStatus, number, any, Dispatch<SetStateAction<number[] | undefined>>] {
+): [
+  TrainStatus,
+  number,
+  Params,
+  any,
+  Dispatch<SetStateAction<number[] | undefined>>,
+  Dispatch<SetStateAction<Params>>
+] {
   const [trainSet, setTrainSet] = useState(initTrainSet);
   const [result, setResult] = useState();
   const [status, setStatus] = useState("initial" as TrainStatus);
   const [epoch, setEpoch] = useState(0);
+  const [params, setParams] = useState({
+    embeddingSize: 50,
+    gcnSize1: 64,
+    gcnSize2: 64,
+    dropout: 0.5,
+    lr: 0.012,
+    wd: 0.009,
+  } as Params);
 
   useEffect(() => {
     if (!trainSet) return;
@@ -21,7 +45,7 @@ export default function useTrainModel(
 
     socket.on("response_connect", () => {
       console.log("socket connect.");
-      socket.emit("train", trainSet);
+      socket.emit("train", trainSet, params);
     });
 
     socket.on("response_disconnect", () => {
@@ -47,7 +71,8 @@ export default function useTrainModel(
         socket.disconnect();
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, trainSet]);
 
-  return [status, epoch, result, setTrainSet];
+  return [status, epoch, params, result, setTrainSet, setParams];
 }
