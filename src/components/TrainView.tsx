@@ -5,6 +5,7 @@ import { InputNumber, Button, Spin } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import useTrainModel from "../lib/useTrainModel";
 import { AppContext } from "../AppReducer";
+import _ from "lodash";
 
 export interface Props {
   defaultTrainSet: number[];
@@ -53,7 +54,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
       trainInfo: {
         name: `Train_${trainList.length}`,
         params,
-        trainSet: currentTrainSet,
+        trainSet: _.cloneDeep(currentTrainSet),
         result: trainResult,
         time: date.toLocaleTimeString() + ", " + date.toLocaleDateString(),
       },

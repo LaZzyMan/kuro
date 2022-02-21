@@ -40,8 +40,9 @@ const reducer = (state: State, action) => {
         displayTrainSet: action.trainSet,
       };
     case "appendTrainList":
-      state.trainList.push(action.trainInfo);
-      return { ...state };
+      state.trainList.unshift(action.trainInfo);
+      return { ...state,
+      trainList: [...state.trainList] };
     case "removeTrainList":
       const tList = state.trainList.filter((v) => v.name !== action.name);
       return {
@@ -66,7 +67,7 @@ const reducer = (state: State, action) => {
       };
     case "appendTrainSet":
       state.currentTrainSet.push(action.regionClass);
-      return state;
+      return { ...state, currentTrainSet: [...state.currentTrainSet] };
     case "removeTrainSet":
       const tmp = state.currentTrainSet.filter((v) => v.rid !== action.rid);
       return {

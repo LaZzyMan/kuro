@@ -81,7 +81,8 @@ const RegionLayer: FC<RegionLayerProps> = ({
           ...v,
           properties: {
             ...v.properties,
-            inTrainSet: v.properties.rid in trainSet ? "in" : "out",
+            inTrainSet:
+              trainSet.indexOf(v.properties.rid) !== -1 ? "in" : "out",
           },
         })),
       };
@@ -162,10 +163,12 @@ const RegionLayer: FC<RegionLayerProps> = ({
         (v: any) => v.properties.rid === rid
       )[0];
       feature.properties.inTrainSet =
-        feature.properties.rid in trainSet ? "in" : "out";
+        trainSet.indexOf(feature.properties.rid) !== -1 ? "in" : "out";
+      if (displayResult)
+        feature.properties.class = displayResult[feature.properties.rid];
       setHoverFeature(feature);
     },
-    [data, map, trainSet]
+    [data, map, trainSet, displayResult]
   );
 
   return (
@@ -251,15 +254,34 @@ const RegionLayer: FC<RegionLayerProps> = ({
         sourceId="hoverPolygon"
         type="fill"
         paint={{
-          "fill-color": [
-            "match",
-            ["get", "inTrainSet"],
-            "out",
-            "#0080ff",
-            "in",
-            "#ff0000",
-            "#ff0000",
-          ],
+          "fill-color":
+            displayMode === "trainSet"
+              ? [
+                  "match",
+                  ["get", "inTrainSet"],
+                  "out",
+                  "#0080ff",
+                  "in",
+                  "#ff0000",
+                  "#ff0000",
+                ]
+              : [
+                  "match",
+                  ["get", "class"],
+                  "C",
+                  "#ef476f",
+                  "G",
+                  "#06d6a0",
+                  "M",
+                  "#073b4c",
+                  "P",
+                  "#ffd166",
+                  "R",
+                  "#118ab2",
+                  "U",
+                  "#8338ec",
+                  "#ffffff",
+                ],
           "fill-opacity": 0.8,
         }}
         layout={{

@@ -107,6 +107,7 @@ const SortableItem = SortableElement(({ value, detail, onDetailClick }) => {
             type="link"
             title="删除模型"
             icon={<DeleteOutlined />}
+            disabled={detail}
             onClick={remove}
           />
         </div>

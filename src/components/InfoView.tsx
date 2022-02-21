@@ -83,10 +83,17 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
           style={{
             display: "flex",
             paddingLeft: "5%",
+            paddingRight: "10%",
             marginTop: "10px",
+            justifyContent: "space-between",
           }}
         >
-          <span>区域类别</span>
+          <span>区域类别:</span>
+          <span style={{ fontWeight: "bold" }}>
+            {selectedClass
+              ? classes.filter((v) => v.code === selectedClass)[0].name
+              : "暂无"}
+          </span>
         </div>
         <div className={style.switchContainer}>
           {classes.map((value, index) => (
