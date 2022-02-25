@@ -1,5 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import io from "socket.io-client";
+import { uuid } from "./util";
 
 type TrainStatus = "initial" | "load" | "train" | "pred" | "finish";
 
@@ -45,7 +46,7 @@ export default function useTrainModel(
 
     socket.on("response_connect", () => {
       console.log("socket connect.");
-      socket.emit("train", trainSet, params);
+      socket.emit("train", trainSet, params, uuid());
     });
 
     socket.on("response_disconnect", () => {

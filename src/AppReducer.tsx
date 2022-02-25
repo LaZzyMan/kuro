@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import { Params } from "./lib/useTrainModel";
+import { getRgbArray } from "./lib/util";
 
 export interface RegionClass {
   rid: number;
@@ -8,6 +9,7 @@ export interface RegionClass {
 
 export interface TrainInfo {
   name: string;
+  id: string;
   params: Params;
   trainSet: Array<RegionClass>;
   result: any;
@@ -20,6 +22,8 @@ export interface State {
   trainList: Array<TrainInfo>;
   displayMode: "trainSet" | "result";
   selectedTrainName: string | null;
+  attributionCache: object[];
+  colorArray: number[][];
 }
 
 const reducer = (state: State, action) => {
@@ -41,8 +45,7 @@ const reducer = (state: State, action) => {
       };
     case "appendTrainList":
       state.trainList.unshift(action.trainInfo);
-      return { ...state,
-      trainList: [...state.trainList] };
+      return { ...state, trainList: [...state.trainList] };
     case "removeTrainList":
       const tList = state.trainList.filter((v) => v.name !== action.name);
       return {
@@ -54,7 +57,7 @@ const reducer = (state: State, action) => {
         (v) => v.name === action.oldName
       )[0];
       target.name = action.newName;
-      return { ...state };
+      return { ...state, trainList: [...state.trainList] };
     case "setTrainList":
       return {
         ...state,
@@ -74,6 +77,14 @@ const reducer = (state: State, action) => {
         ...state,
         currentTrainSet: tmp,
       };
+    case "addAttributionCache":
+      for (let i = 0; i < action.models.length; i++) {
+        state.attributionCache[action.rid][action.models[i]] = action.result[i];
+      }
+      return {
+        ...state,
+        attributionCache: [...state.attributionCache],
+      };
     default:
       return state;
   }
@@ -87,6 +98,8 @@ export const defaultValue: State = {
   trainList: [] as Array<TrainInfo>,
   displayMode: "trainSet",
   selectedTrainName: null,
+  attributionCache: Array.from({ length: 1514 }, () => ({})),
+  colorArray: getRgbArray(10),
 };
 
 const AppReducer = ({ children }) => {

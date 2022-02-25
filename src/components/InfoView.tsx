@@ -140,7 +140,7 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
         <div className={style.trainSetTitle}>
           <span>训练集概况</span>
         </div>
-        <TrainSetChart size={300} onClick={() => {}} />
+        <TrainSetChart />
       </div>
     </div>
   );

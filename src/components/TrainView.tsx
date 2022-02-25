@@ -1,7 +1,14 @@
-import React, { FC, useCallback, useContext, useEffect, useMemo } from "react";
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import TrainList from "./TrainList";
 import style from "./TrainView.module.css";
-import { InputNumber, Button, Spin } from "antd";
+import { InputNumber, Button, Spin, Modal, Radio } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import useTrainModel from "../lib/useTrainModel";
 import { AppContext } from "../AppReducer";
@@ -15,19 +22,26 @@ export interface Props {
 const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
   const { state, dispatch } = useContext(AppContext);
   const { currentTrainSet, trainList } = state;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [trainRadio, setTrainRadio] = useState(1);
   const [trainStatus, epoch, params, trainResult, setTrainSet, setParams] =
-    useTrainModel("ws://127.0.0.1:5000/kuro");
+    useTrainModel("ws://192.168.61.91:7325/kuro");
   const trainSet = useMemo(() => {
     return currentTrainSet.map((v) => v.rid);
   }, [currentTrainSet]);
 
   const createDefaultTrainSet = useCallback(() => {
-    const tmp = defaultTrainSet.map((v) => ({
+    const trainSet = defaultTrainSet.slice(
+      0,
+      Math.floor((defaultTrainSet.length * trainRadio) / 4)
+    );
+    const tmp = trainSet.map((v) => ({
       rid: v,
       class: trueLabel[v],
     }));
     dispatch({ type: "setTrainSet", trainSet: tmp });
-  }, [defaultTrainSet, trueLabel, dispatch]);
+    setModalVisible(false);
+  }, [defaultTrainSet, trueLabel, dispatch, trainRadio]);
 
   const onTrainClick = useCallback(() => {
     setTrainSet(trainSet);
@@ -53,6 +67,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
       type: "appendTrainList",
       trainInfo: {
         name: `Train_${trainList.length}`,
+        id: trainResult.id,
         params,
         trainSet: _.cloneDeep(currentTrainSet),
         result: trainResult,
@@ -158,10 +173,10 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
           </div>
           <div
             className={style.paramContainer}
-            style={{ justifyContent: "space-around", marginTop: "15px" }}
+            style={{ justifyContent: "space-around", marginTop: "10px" }}
           >
             <Button icon={<UploadOutlined />} />
-            <Button onClick={createDefaultTrainSet}>重置参数</Button>
+            <Button onClick={() => setModalVisible(true)}>训练集</Button>
             <Button type="primary" onClick={onTrainClick}>
               训练模型
             </Button>
@@ -174,6 +189,23 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
         </div>
         <TrainList />
       </div>
+      <Modal
+        visible={modalVisible}
+        title={"训练集比例"}
+        centered
+        onCancel={() => setModalVisible(false)}
+        onOk={createDefaultTrainSet}
+      >
+        <Radio.Group
+          onChange={(e) => setTrainRadio(e.target.value)}
+          value={trainRadio}
+        >
+          <Radio value={1}>5%</Radio>
+          <Radio value={2}>10%</Radio>
+          <Radio value={3}>15%</Radio>
+          <Radio value={4}>20%</Radio>
+        </Radio.Group>
+      </Modal>
     </div>
   );
 };

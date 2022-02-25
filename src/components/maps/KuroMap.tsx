@@ -58,7 +58,7 @@ const KuroMap: FC<KuroMapProps> = ({
   const [regionCenter, setRegionCenter] = useState([0, 0]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [box, setBox] = useState([0, 0, 0, 0]);
-  const [rid, setRid, adjMatrix] = useAdj("ws://127.0.0.1:5000/kuro");
+  const [rid, setRid, adjMatrix] = useAdj("ws://192.168.61.91:7325/kuro");
   const [flowData, setFlowData] = useState();
   const [brushData, setBrushData] = useState();
   const [play, setPlay] = useState(false);

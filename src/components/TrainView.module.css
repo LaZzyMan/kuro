@@ -18,7 +18,7 @@
 }
 
 .paramInput {
-    width: 30%;
+    width: 30%!important;
 }
 
 .paramContainer {
@@ -50,5 +50,5 @@
 }
 
 .spin i {
-    background-color: #91C483;
+    background-color: rgb(1,115,98);
 }

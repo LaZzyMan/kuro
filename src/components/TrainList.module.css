@@ -1,8 +1,10 @@
 .handle {
-    background: linear-gradient(180deg,#1890ff,#1890ff 20%,#fff 0,#fff 40%,#1890ff 0,#1890ff 60%,#fff 0,#fff 80%,#1890ff 0,#1890ff);
     display: block;
     width: 20px;
-    height: 16px;
+    height: 20px;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 3px;
     opacity: .9;
     margin-right: 5%;
     margin-left: 5%;
@@ -48,7 +50,7 @@
     justify-content: space-between;
     padding-left: 5%;
     padding-right: 5%;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .contentLine {

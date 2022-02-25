@@ -11,10 +11,7 @@ import React, {
 } from "react";
 import { AppContext, RegionClass } from "../../AppReducer";
 
-export interface Props {
-  size: number;
-  onClick: (i: number) => void;
-}
+export interface Props {}
 
 const marginBottom = 2;
 const marginTop = 30;
@@ -57,8 +54,6 @@ const TrainSetChart: FC<Props> = () => {
         ...transform(v.trainSet),
       }))
     );
-    console.log(transformedData);
-    console.log(isEmpty(transformedData));
     return transformedData;
   }, [trainList, currentTrainSet]);
 
@@ -212,8 +207,8 @@ const TrainSetChart: FC<Props> = () => {
             .attr("y", 4)
             .attr("fill", "currentColor")
             .attr("font-weight", (d) => {
-              if (!selectedTrainName && d.name === "Current") return 500;
-              else return selectedTrainName === d.name ? 500 : 300;
+              if (!selectedTrainName && d.name === "Current") return 800;
+              else return selectedTrainName === d.name ? 800 : 300;
             })
             .attr("text-anchor", "end")
             .text((d) => d.name)
@@ -261,7 +256,7 @@ const TrainSetChart: FC<Props> = () => {
   return isEmpty(data) ? (
     <Empty
       style={{
-        marginTop: "40%",
+        marginTop: "45%",
       }}
       image={Empty.PRESENTED_IMAGE_SIMPLE}
       description={<span>未添加训练集</span>}

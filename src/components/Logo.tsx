@@ -13,7 +13,7 @@ const Logo: FC = () => {
           right: 0,
           borderStyle: "solid",
           borderWidth: "80px 80px 80px 80px",
-          borderColor: "#91C483 #91C483 transparent transparent",
+          borderColor: "rgb(1,115,98) rgb(1,115,98) transparent transparent",
         }}
       />
       <div

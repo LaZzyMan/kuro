@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import AppReducer from "./AppReducer";
 import InfoView from "./components/InfoView";
+import AttributionView from "./components/AttributionView";
 import TrainView from "./components/TrainView";
 import Layout from "./components/Layout";
 import Mask from "./components/Mask";
@@ -51,22 +52,7 @@ function App() {
                 />
               </div>
             }
-            rightBottomView={
-              <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  color: "white",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "x-large",
-                  fontWeight: 700,
-                }}
-              >
-                <span>Feature Attribution View</span>
-              </div>
-            }
+            rightBottomView={<AttributionView rid={ridSelected} />}
           />
         </Mask>
       </div>
