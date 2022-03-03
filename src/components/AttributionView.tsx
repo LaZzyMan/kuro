@@ -8,10 +8,9 @@ import React, {
 } from "react";
 import { AppContext } from "../AppReducer";
 import useAttrubte from "../lib/useAttribute";
-import AttributionChart from "./charts/AttributionChart";
+import PredChart from "./charts/PredChart";
 import style from "./AttributionView.module.css";
 import { Empty, Spin, Switch } from "antd";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 
 export interface Props {
   rid: null | number;
@@ -74,6 +73,11 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
     return complete ? attributions : null;
   }, [trainList, attributionCache, rid]);
 
+  const pred = useMemo(() => {
+    if (rid && trainList.length !== 0)
+      return trainList.map((v) => v.result.score[rid]);
+  }, [trainList, rid]);
+
   return (
     <div className={style.container}>
       <div className={style.title}>
@@ -110,10 +114,7 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
           size="large"
         >
           {rid && trainList.length !== 0 ? (
-            <AttributionChart
-              data={data}
-              pred={trainList.map((v) => v.result.score[rid])}
-            />
+            <PredChart data={data} pred={pred} rid={rid}/>
           ) : (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}

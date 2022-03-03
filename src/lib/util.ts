@@ -37,12 +37,16 @@ export const classes = [
   },
 ];
 
+export const posColor = "#f64f59";
+
+export const negColor = "#12c2e9";
+
 export const datasets = [
   {
     index: 0,
     name: "Land Cover",
     code: "L",
-    color: "#2E94B9",
+    color: "#81B214",
     startAngle: -Math.PI / 4,
     endAngle: Math.PI / 4,
     padAngle: 0.05,
@@ -51,7 +55,7 @@ export const datasets = [
     index: 1,
     name: "Point of Interest",
     code: "P",
-    color: "#F0B775",
+    color: "#BB8082",
     startAngle: Math.PI / 4,
     endAngle: (Math.PI * 3) / 4,
     padAngle: 0.05,
@@ -60,7 +64,7 @@ export const datasets = [
     index: 2,
     name: "Building",
     code: "B",
-    color: "#D25565",
+    color: "#4B778D",
     startAngle: (Math.PI * 3) / 4,
     endAngle: (Math.PI * 5) / 4,
     padAngle: 0.05,
@@ -69,10 +73,53 @@ export const datasets = [
     index: 3,
     name: "Taxi Trajectory",
     code: "T",
-    color: "#8bc24c",
+    color: "#F58634",
     startAngle: (Math.PI * 5) / 4,
     endAngle: (Math.PI * 7) / 4,
     padAngle: 0.05,
+  },
+];
+
+export const featureSets = [
+  {
+    index: 0,
+    name: "Land Cover",
+    abbr: "LC",
+    color: "#81B214",
+    length: 19,
+    chinese: "地表覆盖特征",
+  },
+  {
+    index: 1,
+    name: "Point of Interest",
+    abbr: "POI",
+    color: "#BB8082",
+    length: 17,
+    chinese: "兴趣点特征",
+  },
+  {
+    index: 2,
+    name: "Building",
+    abbr: "B",
+    color: "#4B778D",
+    length: 4,
+    chinese: "建筑特征",
+  },
+  {
+    index: 3,
+    name: "Mobility",
+    abbr: "M",
+    color: "#F58634",
+    length: 1514,
+    chinese: "轨迹流动性特征",
+  },
+  {
+    index: 4,
+    name: "Rhythm",
+    abbr: "R",
+    color: "#FFCC29",
+    length: 48,
+    chinese: "轨迹节律性特征",
   },
 ];
 
@@ -95,6 +142,7 @@ export const lcTypes = [
   "Herbaceons tundra",
   "Impervious surface",
   "Bareland",
+  "Land Cover Mix Index",
 ];
 
 export const poiTypes = [
@@ -114,6 +162,30 @@ export const poiTypes = [
   "Sport and leisure service",
   "Public utilities",
   "Famous tourist sites",
+  "POI Mix Index",
+];
+
+export const buildingTypes = ["PLAND", "BLSI", "Floor Mean", "Floor Std"];
+
+export const mobilityTypes = Array.from(
+  { length: 1514 },
+  (_, i) => `Region_${i}`
+);
+
+export const rhythmTypes = Array.from({ length: 48 }, (_, i) => {
+  if (i >= 24) {
+    return `In_${i}H`;
+  } else {
+    return `Out_${i}H`;
+  }
+});
+
+export const featureTypes = [
+  lcTypes,
+  poiTypes,
+  buildingTypes,
+  mobilityTypes,
+  rhythmTypes,
 ];
 
 export const uuid = () => {
@@ -184,3 +256,23 @@ export const getRgbArray = (hslLength) => {
   const RGB = HSL.map((v) => hslToRgb(v[0], v[1], v[2]));
   return RGB;
 };
+
+export function indexOfMax(arr) {
+  if (arr.length === 0) {
+    return -1;
+  }
+
+  var max = arr[0];
+
+  var maxIndex = 0;
+
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] > max) {
+      maxIndex = i;
+
+      max = arr[i];
+    }
+  }
+
+  return maxIndex;
+}

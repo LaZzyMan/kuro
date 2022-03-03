@@ -7,6 +7,8 @@ export interface FeatureData {
   featureBuilding: number[][];
   trueLabel: string[];
   defaultTrainSet: number[];
+  featureMobility: number[][];
+  featureRhythm: number[][];
 }
 
 export interface Feature {
@@ -26,6 +28,8 @@ const featureUrls = [
   "data/featureBuildingRaw.bin",
   "data/allOutput.bin",
   "data/trainSet.bin",
+  "data/featureMobility.bin",
+  "data/featureRhythm.bin",
 ];
 
 const geojsonUrls = ["data/region.geojson"];
@@ -45,7 +49,7 @@ export async function loadFeatureTensor(
         Promise.all(responses.map((r) => r.arrayBuffer())).then((datas) => {
           console.log("特征数据解析完成.");
           const featureLC = chunk(new Float32Array(datas[0]), 19);
-          const featurePOI = chunk(new Float32Array(datas[1]), 16);
+          const featurePOI = chunk(new Float32Array(datas[1]), 17);
           const featureBuilding = chunk(new Float32Array(datas[2]), 4);
           const allOutput = chunk(new Float32Array(datas[3]), 6);
           const defaultTrainSet = Array.from(new Float32Array(datas[4]));
@@ -55,6 +59,8 @@ export async function loadFeatureTensor(
               return classes[allOutput[i].indexOf(1)];
             }
           );
+          const featureMobility = chunk(new Float32Array(datas[5]), 1514);
+          const featureRhythm = chunk(new Float32Array(datas[6]), 48);
           setTimeout(parseCallback, 2000);
           resolve({
             featureLC,
@@ -62,6 +68,8 @@ export async function loadFeatureTensor(
             featureBuilding,
             trueLabel,
             defaultTrainSet,
+            featureMobility,
+            featureRhythm,
           });
         });
       });

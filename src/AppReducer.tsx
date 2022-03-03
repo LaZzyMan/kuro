@@ -1,10 +1,18 @@
 import React, { useReducer } from "react";
 import { Params } from "./lib/useTrainModel";
 import { getRgbArray } from "./lib/util";
+import { FeatureData, GeoJSONData } from "./lib/loadData";
 
 export interface RegionClass {
   rid: number;
   class: "C" | "G" | "M" | "P" | "R" | "U";
+}
+
+export interface FeatureWeight {
+  weight: number;
+  featureSetIndex: number;
+  featureIndex: number;
+  classIndex: number;
 }
 
 export interface TrainInfo {
@@ -14,6 +22,7 @@ export interface TrainInfo {
   trainSet: Array<RegionClass>;
   result: any;
   time: string;
+  weight: FeatureWeight[];
 }
 
 export interface State {
@@ -24,6 +33,9 @@ export interface State {
   selectedTrainName: string | null;
   attributionCache: object[];
   colorArray: number[][];
+  featureData: FeatureData | null;
+  geoJSONData: GeoJSONData | null;
+  weight: FeatureWeight[];
 }
 
 const reducer = (state: State, action) => {
@@ -85,6 +97,50 @@ const reducer = (state: State, action) => {
         ...state,
         attributionCache: [...state.attributionCache],
       };
+    case "setFeatureData":
+      return {
+        ...state,
+        featureData: action.featureData,
+      };
+    case "setGeoJSONData":
+      return {
+        ...state,
+        geoJSONData: action.geoJSONData,
+      };
+    case "setWeight":
+      const w = state.weight.filter(
+        (v) =>
+          v.featureSetIndex === action.featureSetIndex &&
+          v.classIndex === action.classIndex &&
+          v.featureIndex === action.featureIndex
+      );
+      if (w.length === 0) {
+        state.weight.push({
+          weight: action.weight,
+          featureSetIndex: action.featureSetIndex,
+          featureIndex: action.featureIndex,
+          classIndex: action.classIndex,
+        });
+      } else {
+        w[0].weight = action.weight;
+      }
+      return {
+        ...state,
+        weight: [...state.weight],
+      };
+    case "removeWeight":
+      const t = state.weight.filter(
+        (v) =>
+          !(
+            v.featureSetIndex === action.featureSetIndex &&
+            v.classIndex === action.classIndex &&
+            v.featureIndex === action.featureIndex
+          )
+      );
+      return {
+        ...state,
+        weight: t,
+      };
     default:
       return state;
   }
@@ -100,6 +156,9 @@ export const defaultValue: State = {
   selectedTrainName: null,
   attributionCache: Array.from({ length: 1514 }, () => ({})),
   colorArray: getRgbArray(10),
+  featureData: null,
+  geoJSONData: null,
+  weight: [],
 };
 
 const AppReducer = ({ children }) => {

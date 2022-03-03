@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    width: 240px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+    padding: 5%;
+}
+
+.titleContainer {
+    display: flex;
+    height: 40px;
+    border-bottom: 2px solid #666666;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 8px;
+    height: 40px;
+    align-items: center;
+}
+
+.rowTitle {
+    font-weight: bold;
+}

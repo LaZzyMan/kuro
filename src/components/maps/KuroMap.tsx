@@ -5,7 +5,9 @@ import React, {
   useEffect,
   Fragment,
   useRef,
+  useContext,
 } from "react";
+import { AppContext } from "../../AppReducer";
 import ReactMapboxGL, { MapContext } from "react-mapbox-gl";
 import Marker from "./Marker";
 import Control from "./Control";
@@ -44,6 +46,7 @@ const KuroMap: FC<KuroMapProps> = ({
   featureData,
   onSelect,
 }: KuroMapProps) => {
+  const { dispatch } = useContext(AppContext);
   const requestRef: any = useRef();
   const previousTimeRef: any = React.useRef();
 
@@ -80,6 +83,15 @@ const KuroMap: FC<KuroMapProps> = ({
     });
     requestRef.current = requestAnimationFrame(animate);
   };
+
+  // 将数据保存到context
+  useEffect(() => {
+    dispatch({ type: "setFeatureData", featureData });
+  }, [dispatch, featureData]);
+
+  useEffect(() => {
+    dispatch({ type: "setGeoJSONData", geoJSONData: data });
+  }, [dispatch, data]);
 
   useEffect(() => {
     if (menuSelected === "traj") {

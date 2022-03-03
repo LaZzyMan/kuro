@@ -9,9 +9,9 @@ import React, {
 import TrainList from "./TrainList";
 import style from "./TrainView.module.css";
 import { InputNumber, Button, Spin, Modal, Radio } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import useTrainModel from "../lib/useTrainModel";
 import { AppContext } from "../AppReducer";
+import FeatureWeightView from "./FeatureWeightView";
 import _ from "lodash";
 
 export interface Props {
@@ -21,7 +21,8 @@ export interface Props {
 
 const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
   const { state, dispatch } = useContext(AppContext);
-  const { currentTrainSet, trainList } = state;
+  const { currentTrainSet, trainList, weight } = state;
+  const [showWeight, setShowWeight] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [trainRadio, setTrainRadio] = useState(1);
   const [trainStatus, epoch, params, trainResult, setTrainSet, setParams] =
@@ -72,6 +73,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
         trainSet: _.cloneDeep(currentTrainSet),
         result: trainResult,
         time: date.toLocaleTimeString() + ", " + date.toLocaleDateString(),
+        weight,
       },
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -175,7 +177,9 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             className={style.paramContainer}
             style={{ justifyContent: "space-around", marginTop: "10px" }}
           >
-            <Button icon={<UploadOutlined />} />
+            <Button onClick={() => setShowWeight((prev) => !prev)}>
+              特征权重
+            </Button>
             <Button onClick={() => setModalVisible(true)}>训练集</Button>
             <Button type="primary" onClick={onTrainClick}>
               训练模型
@@ -189,6 +193,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
         </div>
         <TrainList />
       </div>
+      {showWeight && <FeatureWeightView position="up" weight={weight} />}
       <Modal
         visible={modalVisible}
         title={"训练集比例"}
