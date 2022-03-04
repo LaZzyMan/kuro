@@ -1,5 +1,6 @@
 import centeroid from "@turf/centroid";
 import { chunk } from "lodash";
+import area from "@turf/area";
 
 export interface FeatureData {
   featureLC: number[][];
@@ -97,6 +98,16 @@ export async function loadGeoJSONData(
           const centers = datas[0].features.map(
             (v: any) => centeroid(v).geometry.coordinates
           );
+          datas[0].features = datas[0].features.map((f) => {
+            const a = area(f);
+            return {
+              ...f,
+              properties: {
+                ...f.properties,
+                area: a,
+              },
+            };
+          });
           resolve({
             region: datas[0],
             center: centers,

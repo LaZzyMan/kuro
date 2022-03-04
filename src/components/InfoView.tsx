@@ -1,4 +1,11 @@
-import React, { FC, useCallback, useContext, useEffect, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { AppContext } from "../AppReducer";
 import TrainSetChart from "./charts/TrainSetChart";
 import style from "./InfoView.module.css";
@@ -12,7 +19,7 @@ export interface Props {
 
 const InfoView: FC<Props> = ({ rid }: Props) => {
   const { state, dispatch } = useContext(AppContext);
-  const { currentTrainSet } = state;
+  const { currentTrainSet, geoJSONData } = state;
   const [selectedClass, setSelectedClass] = useState(
     null as "C" | "G" | "M" | "P" | "R" | "U" | null
   );
@@ -47,6 +54,18 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
     }
   }, [rid, currentTrainSet]);
 
+  const area = useMemo(() => {
+    if (!geoJSONData || rid === null) return 0;
+    return (geoJSONData.region.features[rid].properties.area / 1000000).toFixed(
+      3
+    );
+  }, [rid, geoJSONData]);
+
+  const poi = useMemo(() => {
+    if (!geoJSONData || rid === null) return 0;
+    return geoJSONData.region.features[rid].properties.poi_count;
+  }, [rid, geoJSONData]);
+
   return (
     <div className={style.container}>
       <div className={style.regionInfo}>
@@ -64,7 +83,7 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
         >
           <span>区域面积:</span>
           <span style={{ color: "#2E94B9", fontWeight: "bold" }}>
-            7.777 平方千米
+            {area} 平方千米
           </span>
         </div>
         <div
@@ -77,7 +96,7 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
           }}
         >
           <span>POI总数:</span>
-          <span style={{ color: "#F0B775", fontWeight: "bold" }}>777 个</span>
+          <span style={{ color: "#F0B775", fontWeight: "bold" }}>{poi} 个</span>
         </div>
         <div
           style={{

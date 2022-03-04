@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "@turf/area": "^6.5.0",
     "@turf/bbox": "^6.5.0",
     "@turf/center": "^6.5.0",
     "@turf/centroid": "^6.5.0",
