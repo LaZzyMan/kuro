@@ -21,11 +21,7 @@ export interface Props {}
 
 const DragHandle = SortableHandle(({ color }) => {
   return (
-    <div
-      style={{ borderColor: color }}
-      className={style.handle}
-      title="更改顺序"
-    />
+    <div style={{ borderColor: color }} className={style.handle} title="Sort" />
   );
 });
 const SortableItem = SortableElement(
@@ -59,7 +55,7 @@ const SortableItem = SortableElement(
       <div
         style={{
           width: "100%",
-          height: detail ? "100%" : "20%",
+          height: detail ? "85%" : "20%",
         }}
       >
         <div className={style.item} style={{ height: detail ? "20%" : "100%" }}>
@@ -75,12 +71,12 @@ const SortableItem = SortableElement(
               onPressEnter={saveName}
             />
           ) : (
-            value.name
+            <span style={{ fontWeight: "bold" }}>{value.name}</span>
           )}
           <div className={style.itemButtonArea}>
             <Button
               type="link"
-              title="查看详细参数"
+              title="Detail"
               icon={detail ? <ZoomOutOutlined /> : <ZoomInOutlined />}
               onClick={() => {
                 dispatch({
@@ -100,7 +96,7 @@ const SortableItem = SortableElement(
             />
             <Button
               type="link"
-              title="编辑名称"
+              title="Edit Name"
               icon={edit ? <SaveOutlined /> : <EditOutlined />}
               onClick={() => {
                 setEdit((prev) => {
@@ -109,10 +105,10 @@ const SortableItem = SortableElement(
                 });
               }}
             />
-            <Button type="link" title="下载模型" icon={<DownloadOutlined />} />
+            <Button type="link" title="Download" icon={<DownloadOutlined />} />
             <Button
               type="link"
-              title="删除模型"
+              title="Delete"
               icon={<DeleteOutlined />}
               disabled={detail}
               onClick={remove}
@@ -128,35 +124,37 @@ const SortableItem = SortableElement(
           }}
         >
           <div className={style.titleLine}>
-            <div style={{ fontWeight: "bold" }}>训练时间: </div>
+            <div style={{ fontWeight: "bold" }}>Time: </div>
             <div>{value.time}</div>
           </div>
           <div className={style.titleLine}>
-            <div style={{ fontWeight: "bold" }}>训练参数: </div>
-          </div>
-          <div className={style.contentLine}>
-            <div>Embedding Size = {value.params.embeddingSize}</div>
-          </div>
-          <div className={style.contentLine}>
-            <div>Drop Rate = {value.params.dropout}</div>
-          </div>
-          <div className={style.contentLine}>
-            <div>
-              Layer Size ={" "}
-              {`[${value.params.gcnSize1}, ${value.params.gcnSize2}]`}
+            <div style={{ fontWeight: "bold" }}>Parameter: </div>
+            <div className={style.paramContainer}>
+              <div className={style.contentLine}>
+                <div>Embedding Size = {value.params.embeddingSize}</div>
+              </div>
+              <div className={style.contentLine}>
+                <div>Drop Rate = {value.params.dropout}</div>
+              </div>
+              <div className={style.contentLine}>
+                <div>
+                  Layer Size ={" "}
+                  {`[${value.params.gcnSize1}, ${value.params.gcnSize2}]`}
+                </div>
+              </div>
+              <div className={style.contentLine}>
+                <div>Learning Rate = {value.params.lr}</div>
+              </div>
+              <div className={style.contentLine}>
+                <div>Weight Decay = {value.params.wd}</div>
+              </div>
             </div>
           </div>
-          <div className={style.contentLine}>
-            <div>Learning Rate = {value.params.lr}</div>
-          </div>
-          <div className={style.contentLine}>
-            <div>Weight Decay = {value.params.wd}</div>
-          </div>
           <div className={style.titleLine}>
-            <div style={{ fontWeight: "bold" }}>地图显示: </div>
+            <div style={{ fontWeight: "bold" }}>Map Dispaly: </div>
             <Switch
-              checkedChildren="分类结果"
-              unCheckedChildren="训练集"
+              checkedChildren="Result"
+              unCheckedChildren="Train Set"
               checked={mapDisplay}
               onChange={changeMapDisplay}
             />
@@ -177,7 +175,7 @@ const SortableList = SortableContainer(
               marginTop: "45%",
             }}
             image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={<span>暂无训练记录</span>}
+            description={<span>No Train Data</span>}
           />
         ) : (
           items.map((value, index) => (

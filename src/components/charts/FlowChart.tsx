@@ -1,5 +1,6 @@
 import React, { useCallback, FC, useMemo, useState, useEffect } from "react";
 import * as d3 from "d3";
+import { inColor, outColor } from "../../lib/util";
 
 export interface Props {
   size: number;
@@ -10,8 +11,6 @@ export interface Props {
   time: number;
 }
 
-const inColor = "#2F3A8F";
-const outColor = "#FE7E6D";
 const interval = 1000;
 
 const line = d3

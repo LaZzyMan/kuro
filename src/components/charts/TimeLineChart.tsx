@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import { sum } from "lodash";
 import React, { useCallback, FC, useMemo, useState, useEffect } from "react";
+import { inColor, outColor } from "../../lib/util";
 
 export interface Props {
   size: [number, number];
@@ -10,8 +11,6 @@ export interface Props {
   onBrushEnd: () => void;
 }
 
-const inColor = "#2F3A8F";
-const outColor = "#FE7E6D";
 const gridColor = "#aaaaaa";
 const interval = 500;
 const margin = {

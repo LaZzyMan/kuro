@@ -14,7 +14,7 @@
 
 .rightView {
   width: 80%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -34,11 +34,11 @@
 .rightTopView {
   width: 100%;
   height: 71.2%;
-  background-color: chocolate;
+  background-color: white;
 }
 
 .rightBottomView {
   width: 100%;
   height: 28.8%;
-  background-color: #fefefe;
+  background-color: white;
 }

@@ -19,10 +19,10 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
 
     let sum = 0;
     const arcData = datasets.map((d: any) => {
-      const duration = 500 * (d.index / 4);
+      const duration = 100 * (d.index / 4);
       sum += duration;
       d.delaytime = sum;
-      d.duration = 500 * (d.index / 4);
+      d.duration = 100 * (d.index / 4);
       const r = _.cloneDeep(d);
 
       r._endAngle = d.endAngle;
@@ -36,6 +36,18 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
       .attr("height", size)
       .attr("viewBox", [-size / 2, -size / 2, size, size])
       .attr("style", "max-width: 100%; height: auto;");
+
+    svg
+      .append("defs")
+      .selectAll("path")
+      .data(datasets)
+      .join("path")
+      .attr("id", (d, i) => `textPath_${i}`)
+      .attr("d", (d: any) => {
+        const p = arcLabel(d);
+        const tmp = p?.split("A");
+        return `${tmp![0]}A${tmp![1]}`;
+      });
 
     const arcs = svg
       .append("g")
@@ -64,7 +76,7 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
 
     const labels = svg
       .append("g")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "Microsoft YaHei")
       .attr("stroke", "white")
       .attr("fill", "white")
       .attr("font-size", size * 0.05)
@@ -72,11 +84,16 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
       .selectAll("text")
       .data(datasets)
       .join("text")
-      .attr("stroke-opacity", 0)
-      .attr("fill-opacity", 0)
-      .attr("writing-mode", (_, i) => (i % 2 === 0 ? "unset" : "tb"))
-      .attr("transform", (d: any) => `translate(${arcLabel.centroid(d)})`)
+      .attr("stroke-opacity", 1)
+      .attr("fill-opacity", 1)
+      .attr("font-weight", "bold")
       .style("cursor", "pointer");
+
+    labels
+      .append("textPath")
+      .attr("startOffset", "50%")
+      .attr("xlink:href", (d, i) => `#textPath_${i}`)
+      .text((d) => `${d.name}`);
 
     labels
       .transition()
@@ -87,15 +104,6 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
         return (t: number) => t;
       });
 
-    labels
-      .selectAll("tspan")
-      .data((d: any) => `${d.name}`.split(/\n/))
-      .join("tspan")
-      .attr("x", 0)
-      .attr("y", (_, i) => `${i * 1.1}em`)
-      .attr("font-weight", "bold")
-      .text((d) => d);
-
     function onMouseover(_: any, i: any) {
       const arc = (arcs.selectAll("path") as any)._parents[i.index] as any;
       const label = (labels.selectAll("text") as any)._parents[i.index] as any;
@@ -103,28 +111,29 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
         .transition()
         .duration(100)
         .ease((t: any) => t)
-        .attr("transform", function (d: any) {
-          var midAngle = (d.startAngle + d._endAngle) / 2;
-          return (
-            "translate(" +
-            size * 0.04 * Math.sin(midAngle) +
-            "," +
-            -size * 0.04 * Math.cos(midAngle) +
-            ")"
-          );
+        .attrTween("d", (d: any, i) => {
+          return (t: number) =>
+            d3
+              .arc()
+              .innerRadius(innerRadius)
+              .outerRadius(outerRadius + size * 0.04 * t)({
+              startAngle: d.startAngle,
+              endAngle: d._endAngle,
+              padAngle: 0.05,
+            } as any) as any;
         });
+
       d3.select(label)
         .transition()
         .duration(100)
         .ease((t: any) => t)
         .attr("transform", function (d: any) {
-          const origin = arcLabel.centroid(d);
           var midAngle = (d.startAngle + d.endAngle) / 2;
           return (
             "translate(" +
-            (size * 0.04 * Math.sin(midAngle) + origin[0]) +
+            size * 0.02 * Math.sin(midAngle) +
             "," +
-            (-size * 0.04 * Math.cos(midAngle) + origin[1]) +
+            -size * 0.02 * Math.cos(midAngle) +
             ")"
           );
         });
@@ -138,29 +147,25 @@ const MenuChart: FC<Props> = ({ size, onClick }) => {
         .transition()
         .duration(100)
         .ease((t: any) => t)
-        .attr("transform", function (d: any, i) {
-          var midAngle = (d.startAngle + d._endAngle) / 2;
-          return (
-            "translate(" +
-            1 * Math.sin(midAngle) +
-            "," +
-            -1 * Math.cos(midAngle) +
-            ")"
-          );
+        .attrTween("d", (d: any, i) => {
+          return (t: number) =>
+            d3
+              .arc()
+              .innerRadius(innerRadius)
+              .outerRadius(outerRadius + size * 0.04 * (1 - t))({
+              startAngle: d.startAngle,
+              endAngle: d._endAngle,
+              padAngle: 0.05,
+            } as any) as any;
         });
       d3.select(label)
         .transition()
         .duration(100)
         .ease((t: any) => t)
         .attr("transform", function (d: any) {
-          const origin = arcLabel.centroid(d);
           var midAngle = (d.startAngle + d.endAngle) / 2;
           return (
-            "translate(" +
-            (Math.sin(midAngle) + origin[0]) +
-            "," +
-            (-Math.cos(midAngle) + origin[1]) +
-            ")"
+            "translate(" + Math.sin(midAngle) + "," + -Math.cos(midAngle) + ")"
           );
         });
     }

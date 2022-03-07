@@ -14,7 +14,7 @@ import { AppContext, RegionClass } from "../../AppReducer";
 export interface Props {}
 
 const marginBottom = 2;
-const marginTop = 30;
+const marginTop = 38;
 const marginRight = 20;
 const marginLeft = 50;
 
@@ -166,10 +166,12 @@ const TrainSetChart: FC<Props> = () => {
           g
             .append("text")
             .attr("x", width - marginRight)
-            .attr("y", -20)
+            .attr("y", -23)
             .attr("fill", "currentColor")
+            .attr("font-size", "12px")
+            .attr("font-weight", 400)
             .attr("text-anchor", "end")
-            .text("选取数量")
+            .text("Num of Regions")
         );
 
       svg
@@ -207,8 +209,8 @@ const TrainSetChart: FC<Props> = () => {
             .attr("y", 4)
             .attr("fill", "currentColor")
             .attr("font-weight", (d) => {
-              if (!selectedTrainName && d.name === "Current") return 800;
-              else return selectedTrainName === d.name ? 800 : 300;
+              if (!selectedTrainName && d.name === "Current") return 500;
+              else return selectedTrainName === d.name ? 500 : 400;
             })
             .attr("text-anchor", "end")
             .text((d) => d.name)
@@ -259,10 +261,13 @@ const TrainSetChart: FC<Props> = () => {
         marginTop: "45%",
       }}
       image={Empty.PRESENTED_IMAGE_SIMPLE}
-      description={<span>未添加训练集</span>}
+      description={<span>No Train Set</span>}
     />
   ) : (
-    <div style={{ width: "100%", height: "90%", overflow: "auto" }} ref={ref} />
+    <div
+      style={{ width: "100%", height: "calc(100% - 40px)", overflow: "auto" }}
+      ref={ref}
+    />
   );
 };
 

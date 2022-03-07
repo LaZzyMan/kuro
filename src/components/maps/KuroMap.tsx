@@ -24,7 +24,7 @@ import {
   TimeLineChart,
   BrushChart,
 } from "../charts";
-import useAdj from "../../lib/useAdj";
+import useRegionData from "../../lib/useRegionData";
 import style from "./KuroMap.module.css";
 import { isEqual } from "lodash";
 
@@ -61,7 +61,9 @@ const KuroMap: FC<KuroMapProps> = ({
   const [regionCenter, setRegionCenter] = useState([0, 0]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [box, setBox] = useState([0, 0, 0, 0]);
-  const [rid, setRid, adjMatrix] = useAdj("ws://192.168.61.91:7325/kuro");
+  const [rid, setRid, adjMatrix, building] = useRegionData(
+    "ws://192.168.61.91:7325/kuro"
+  );
   const [flowData, setFlowData] = useState();
   const [brushData, setBrushData] = useState();
   const [play, setPlay] = useState(false);
@@ -74,6 +76,7 @@ const KuroMap: FC<KuroMapProps> = ({
   const [targetRids, setTargetRids] = useState(
     undefined as number[] | undefined
   );
+  const [targetMode, setTargetMode] = useState("in");
 
   const animate = () => {
     const t =
@@ -101,6 +104,43 @@ const KuroMap: FC<KuroMapProps> = ({
       setPlay(false);
       setIsBrush(false);
     }
+  }, [menuSelected]);
+
+  useEffect(() => {
+    if (!mapInstance) return;
+    if (menuSelected === "building") {
+      // 缩放并倾斜视角
+      (mapInstance! as any).fitBounds(box, {
+        padding:
+          Math.min(
+            (mapInstance as any).getContainer().offsetHeight,
+            (mapInstance as any).getContainer().offsetWidth
+          ) * 0.15,
+      });
+      // 设置时间间隔避免动画覆盖
+      setTimeout(() => {
+        (mapInstance as any).flyTo({ pitch: 75 });
+      }, 300);
+    } else {
+      (mapInstance as any).flyTo({ pitch: 0 });
+      setTimeout(() => {
+        (mapInstance! as any).fitBounds(box, {
+          padding:
+            Math.min(
+              (mapInstance as any).getContainer().offsetHeight,
+              (mapInstance as any).getContainer().offsetWidth
+            ) * 0.35,
+          offset: [
+            0,
+            -Math.min(
+              (mapInstance as any).getContainer().offsetHeight,
+              (mapInstance as any).getContainer().offsetWidth
+            ) * 0.06,
+          ],
+        });
+      }, 300);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuSelected]);
 
   useEffect(() => {
@@ -159,13 +199,14 @@ const KuroMap: FC<KuroMapProps> = ({
     } else if (i === 3) {
       setMenuSelected("traj");
     } else {
-      // Building
+      setMenuSelected("building");
     }
     setStatus("detail");
   }, []);
 
   const onLoad = (map: any) => {
     setMapInstance(map);
+    (window as any).map = map;
   };
 
   useEffect(() => {
@@ -255,7 +296,8 @@ const KuroMap: FC<KuroMapProps> = ({
     setIsBrush(false);
   }, []);
 
-  const brushBarHoverHandler = useCallback((rids) => {
+  const brushBarHoverHandler = useCallback((mode, rids) => {
+    if (mode) setTargetMode(mode);
     setTargetRids(rids);
   }, []);
 
@@ -295,6 +337,9 @@ const KuroMap: FC<KuroMapProps> = ({
                 onClick={regionClickHandler}
                 status={status}
                 targetRids={targetRids}
+                buildingData={building}
+                showBuidling={menuSelected === "building"}
+                flowIn={targetMode === "in"}
               />
               <Marker
                 pitchAlignment="map"
@@ -318,6 +363,8 @@ const KuroMap: FC<KuroMapProps> = ({
                     ) : (
                       <FlowChart data={flowData} size={chartSize} time={time} />
                     )
+                  ) : menuSelected === "building" ? (
+                    <></>
                   ) : (
                     <FeatureChart
                       data={
@@ -356,6 +403,7 @@ const KuroMap: FC<KuroMapProps> = ({
       {menuSelected === "traj" ? (
         <div className={style.buttonBox}>
           <button
+            style={{ fill: "#444444" }}
             className={style.play}
             onClick={onPlayButtonClick}
             disabled={isBrush}
@@ -394,7 +442,11 @@ const KuroMap: FC<KuroMapProps> = ({
               </svg>
             )}
           </button>
-          <button onClick={onRestartButtonClick} disabled={isBrush}>
+          <button
+            style={{ fill: "#444444" }}
+            onClick={onRestartButtonClick}
+            disabled={isBrush}
+          >
             <svg
               viewBox="0 0 1024 1024"
               version="1.1"

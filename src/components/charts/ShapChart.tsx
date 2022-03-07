@@ -24,6 +24,7 @@ const ShapChart: FC<Props> = ({
   classIndex,
   featureSetIndex,
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [chart, setChart] = useState(null as any);
   const [node, setNode] = useState(null as any);
   const [showCard, setShowCard] = useState(false);

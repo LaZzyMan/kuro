@@ -1,19 +1,20 @@
 .container {
     height: 100%;
     width: 100%;
+    /* background-color: black; */
 }
 .trainParam {
-    height: 50%;
+    height: 45%;
     width: 100%;
     border-bottom: 2px solid #efefef;
 }
 .trainList {
-    height: 50%;
+    height: 55%;
     width: 100%;
 }
 .paramText {
     width: 60%;
-    text-align: center;
+    text-align: left;
     align-self: center;
 }
 
@@ -22,27 +23,41 @@
 }
 
 .paramContainer {
+    padding-left: 5%;
+    padding-right: 5%;
+    justify-content: space-between;
     display: flex;
-    margin-top: 8px;
+    margin-top: 9px;
 }
 .paramTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     text-align: left;
-    font-weight: bold;
+    font-weight: 500;
     padding-left: 5%;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
-    margin-top: 8px;
-    font-size: 16px;
-    border-bottom: 2px solid #efefef;
+    padding-right: 5%;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    font-size: 18px;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
+    background-color: #333333;
+    color: white;
 }
 .trainListTitle{
     display: flex;
+    justify-content: space-between;
     align-items: center;
     text-align: left;
-    font-weight: bold;
+    font-weight: 500;
     padding-left: 5%;
-    font-size: 16px;
-    height: 10%;
+    padding-right: 5%;
+    padding-bottom: 4px;
+    padding-top: 4px;
+    font-size: 18px;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
+    background-color: #333333;
+    color: white;
 }
 
 .spin{
@@ -50,5 +65,9 @@
 }
 
 .spin i {
-    background-color: rgb(1,115,98);
+    background-color: #333333;
+}
+
+.help {
+    color: white;
 }

@@ -11,7 +11,12 @@ import TrainSetChart from "./charts/TrainSetChart";
 import style from "./InfoView.module.css";
 import { Switch } from "antd";
 import { classes } from "../lib/util";
-import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
+import {
+  CloseOutlined,
+  CheckOutlined,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
+import { Button } from "antd";
 
 export interface Props {
   rid: null | number;
@@ -70,48 +75,54 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
     <div className={style.container}>
       <div className={style.regionInfo}>
         <div className={style.regionInfoTitle}>
-          <span>选区信息</span>
+          <span>REGION INFORMATION</span>
+          <Button
+            style={{ color: "white" }}
+            type="link"
+            title="Help"
+            icon={<QuestionCircleOutlined />}
+          />
         </div>
         <div
           style={{
             display: "flex",
             paddingLeft: "5%",
-            paddingRight: "10%",
+            paddingRight: "5%",
             marginTop: "10px",
             justifyContent: "space-between",
           }}
         >
-          <span>区域面积:</span>
-          <span style={{ color: "#2E94B9", fontWeight: "bold" }}>
-            {area} 平方千米
+          <span style={{ fontWeight: "bold" }}>Area:</span>
+          <span>
+            {area} km<sup>2</sup>
           </span>
         </div>
         <div
           style={{
             display: "flex",
             paddingLeft: "5%",
-            paddingRight: "10%",
+            paddingRight: "5%",
             marginTop: "10px",
             justifyContent: "space-between",
           }}
         >
-          <span>POI总数:</span>
-          <span style={{ color: "#F0B775", fontWeight: "bold" }}>{poi} 个</span>
+          <span style={{ fontWeight: "bold" }}>Num POI:</span>
+          <span>{poi}</span>
         </div>
         <div
           style={{
             display: "flex",
             paddingLeft: "5%",
-            paddingRight: "10%",
+            paddingRight: "5%",
             marginTop: "10px",
             justifyContent: "space-between",
           }}
         >
-          <span>区域类别:</span>
-          <span style={{ fontWeight: "bold" }}>
+          <span style={{ fontWeight: "bold" }}>Class:</span>
+          <span>
             {selectedClass
               ? classes.filter((v) => v.code === selectedClass)[0].name
-              : "暂无"}
+              : "Unselected"}
           </span>
         </div>
         <div className={style.switchContainer}>
@@ -142,10 +153,10 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
             justifyContent: "space-between",
             display: "flex",
             paddingLeft: "5%",
-            paddingRight: "10%",
+            paddingRight: "5%",
           }}
         >
-          <span>加入训练集</span>
+          <span style={{ fontWeight: "bold" }}>Add to Train Set</span>
           <Switch
             disabled={selectedClass === null}
             checkedChildren={<CheckOutlined />}
@@ -157,7 +168,13 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
       </div>
       <div className={style.trainSet}>
         <div className={style.trainSetTitle}>
-          <span>训练集概况</span>
+          <span>TRAIN SET</span>
+          <Button
+            style={{ color: "white" }}
+            type="link"
+            title="Help"
+            icon={<QuestionCircleOutlined />}
+          />
         </div>
         <TrainSetChart />
       </div>

@@ -1,6 +1,7 @@
 import React, { useCallback, FC, useMemo, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { concat, isEqual, sum, uniqWith } from "lodash";
+import { inColor, outColor } from "../../lib/util";
 
 export interface Props {
   regionId: number;
@@ -15,7 +16,7 @@ export interface Props {
     in: number[];
     out: number[];
   };
-  onBarHover: (rids?: number[]) => void;
+  onBarHover: (mode?: "in" | "out", rids?: number[]) => void;
 }
 
 const distanceSlice = (data: any) => {
@@ -41,9 +42,7 @@ const distanceSlice = (data: any) => {
   };
 };
 
-const inColor = "#2F3A8F";
 const inColors = d3.interpolateRgb(d3.rgb("#ffffff"), d3.rgb(inColor));
-const outColor = "#FE7E6D";
 const outColors = d3.interpolateRgb(d3.rgb("#ffffff"), d3.rgb(outColor));
 const interval = 500;
 
@@ -358,7 +357,10 @@ const BrushChart: FC<Props> = ({
         uniqRids.sort((a, b) => b.degree - a.degree);
 
         // 更新地图显示
-        onBarHover(uniqRids.map((v: any) => v.rid));
+        onBarHover(
+          mode,
+          uniqRids.map((v: any) => v.rid)
+        );
 
         targets = uniqRids.map(({ rid, degree }) => {
           const dp = map.project(centers[rid]);

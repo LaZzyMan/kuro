@@ -56,19 +56,19 @@ const FeatureWeightView: FC<Props> = ({ position, weight }) => {
         pagination={false}
         columns={[
           {
-            title: "Name",
+            title: "NAME",
             dataIndex: "name",
             key: "name",
             render: (text) => <span>{text}</span>,
           },
           {
-            title: "Class",
+            title: "CLASS",
             dataIndex: "className",
             key: "class",
             render: (text) => <span>{text}</span>,
           },
           {
-            title: "Weight",
+            title: "WEIGHT",
             dataIndex: "weight",
             key: "weight",
             render: (w) => (

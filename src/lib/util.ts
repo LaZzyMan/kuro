@@ -1,52 +1,79 @@
+export const posColor = "#f64f59";
+export const negColor = "#12c2e9";
+export const inColor = "#2F3A8F";
+export const outColor = "#FE7E6D";
+export const classColor = [
+  "#ef476f",
+  "#06d6a0",
+  "#073b4c",
+  "#ffd166",
+  "#118ab2",
+  "#8338ec",
+];
+export const datasetColor = [
+  "#81B214",
+  "#BB8082",
+  "#4B778D",
+  "#F58634",
+  "#FFCC29",
+];
+export const trainSetColor = ["#0080ff", "#ff0000"];
+// export const selectedRegionColor = "#541212";
+export const selectedRegionColor = "#000000";
+export const buildingColor = "#aaa";
+export const themeColor = "#333333";
+
 export const classes = [
   {
-    name: "商业与服务业用地",
+    name: "Commerical and Business Facility",
+    chName: "商业与服务业用地",
     code: "C",
-    color: "#ef476f",
+    color: classColor[0],
     abbr: "商服用地",
   },
   {
-    name: "绿地与广场用地",
+    name: "Park and Square",
+    cnName: "绿地与广场用地",
     code: "G",
     abbr: "绿化用地",
-    color: "#06d6a0",
+    color: classColor[1],
   },
   {
-    name: "工业用地",
+    name: "Industrial",
+    cnName: "工业用地",
     code: "M",
-    color: "#073b4c",
+    color: classColor[2],
     abbr: "工业用地",
   },
   {
-    name: "公共管理与服务用地",
+    name: "Pubilic Management and Service",
+    cnName: "公共管理与服务用地",
     code: "P",
-    color: "#ffd166",
+    color: classColor[3],
     abbr: "公管用地",
   },
   {
-    name: "居住用地",
+    name: "Residential",
+    cnName: "居住用地",
     code: "R",
-    color: "#118ab2",
+    color: classColor[4],
     abbr: "居住用地",
   },
   {
-    name: "市政公用设施用地",
+    name: "Municipal Publicutilities",
+    cnName: "市政公用设施用地",
     code: "U",
-    color: "#8338ec",
+    color: classColor[5],
     abbr: "市政用地",
   },
 ];
-
-export const posColor = "#f64f59";
-
-export const negColor = "#12c2e9";
 
 export const datasets = [
   {
     index: 0,
     name: "Land Cover",
     code: "L",
-    color: "#81B214",
+    color: datasetColor[0],
     startAngle: -Math.PI / 4,
     endAngle: Math.PI / 4,
     padAngle: 0.05,
@@ -55,7 +82,7 @@ export const datasets = [
     index: 1,
     name: "Point of Interest",
     code: "P",
-    color: "#BB8082",
+    color: datasetColor[1],
     startAngle: Math.PI / 4,
     endAngle: (Math.PI * 3) / 4,
     padAngle: 0.05,
@@ -64,7 +91,7 @@ export const datasets = [
     index: 2,
     name: "Building",
     code: "B",
-    color: "#4B778D",
+    color: datasetColor[2],
     startAngle: (Math.PI * 3) / 4,
     endAngle: (Math.PI * 5) / 4,
     padAngle: 0.05,
@@ -73,7 +100,7 @@ export const datasets = [
     index: 3,
     name: "Taxi Trajectory",
     code: "T",
-    color: "#F58634",
+    color: datasetColor[3],
     startAngle: (Math.PI * 5) / 4,
     endAngle: (Math.PI * 7) / 4,
     padAngle: 0.05,
@@ -85,7 +112,7 @@ export const featureSets = [
     index: 0,
     name: "Land Cover",
     abbr: "LC",
-    color: "#81B214",
+    color: datasetColor[0],
     length: 19,
     chinese: "地表覆盖特征",
   },
@@ -93,7 +120,7 @@ export const featureSets = [
     index: 1,
     name: "Point of Interest",
     abbr: "POI",
-    color: "#BB8082",
+    color: datasetColor[1],
     length: 17,
     chinese: "兴趣点特征",
   },
@@ -101,7 +128,7 @@ export const featureSets = [
     index: 2,
     name: "Building",
     abbr: "B",
-    color: "#4B778D",
+    color: datasetColor[2],
     length: 4,
     chinese: "建筑特征",
   },
@@ -109,7 +136,7 @@ export const featureSets = [
     index: 3,
     name: "Mobility",
     abbr: "M",
-    color: "#F58634",
+    color: datasetColor[3],
     length: 1514,
     chinese: "轨迹流动性特征",
   },
@@ -117,7 +144,7 @@ export const featureSets = [
     index: 4,
     name: "Rhythm",
     abbr: "R",
-    color: "#FFCC29",
+    color: datasetColor[4],
     length: 48,
     chinese: "轨迹节律性特征",
   },

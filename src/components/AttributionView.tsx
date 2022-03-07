@@ -10,7 +10,8 @@ import { AppContext } from "../AppReducer";
 import useAttrubte from "../lib/useAttribute";
 import PredChart from "./charts/PredChart";
 import style from "./AttributionView.module.css";
-import { Empty, Spin, Switch } from "antd";
+import { Empty, Spin, Switch, Button } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 export interface Props {
   rid: null | number;
@@ -52,7 +53,6 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
 
   useEffect(() => {
     if (!result) return;
-    console.log(result);
     dispatch({ type: "addAttributionCache", rid, models, result });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [result]);
@@ -81,7 +81,20 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
   return (
     <div className={style.container}>
       <div className={style.title}>
-        <span>选区信息</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <span>FEATURTE ATTRIBUTE</span>
+          <Button
+            style={{ marginLeft: "10px", color: "white" }}
+            type="link"
+            title="Help"
+            icon={<QuestionCircleOutlined />}
+          />
+        </div>
         <div
           style={{
             justifyContent: "space-between",
@@ -93,28 +106,32 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
           <span
             style={{
               fontSize: "14px",
-              fontWeight: "normal",
+              fontWeight: 500,
             }}
           >
-            特征归因基准
+            Baseline:
           </span>
           <Switch
-            checkedChildren="均值"
-            unCheckedChildren="零值"
+          className={style.switch}
+            checkedChildren="Mean"
+            unCheckedChildren="Zero"
             onChange={switchChangeHandler}
             checked={baseline === "mean"}
+            style={{
+              background: baseline === "mean" ? "#fefefe" : "#ddd",
+            }}
           />
         </div>
       </div>
       <div className={style.chart}>
         <Spin
           spinning={status !== "init" && status !== "finish"}
-          tip={`正在进行模型解释: Model: ${progress} / ${models.length}.`}
+          tip={`Interpreting Model Prediction: Model: ${progress} / ${models.length}.`}
           wrapperClassName={style.spin}
           size="large"
         >
           {rid && trainList.length !== 0 ? (
-            <PredChart data={data} pred={pred} rid={rid}/>
+            <PredChart data={data} pred={pred} rid={rid} />
           ) : (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -123,7 +140,7 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
                 margin: 0,
               }}
               description={
-                <span>{rid ? "暂无训练结果" : "未选择目标区域"}</span>
+                <span>{rid ? "No Train Results." : "Region Unselected."}</span>
               }
             />
           )}

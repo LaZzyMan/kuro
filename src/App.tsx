@@ -9,7 +9,7 @@ import KuroMap from "./components/maps/KuroMap";
 import LoadInfo from "./components/LoadInfo";
 import Logo from "./components/Logo";
 import useData from "./lib/useData";
-import "./App.css";
+import "./App.less";
 
 function App() {
   const [fdStatus, fpStatus, gdStatus, gpStatus, featureData, geoJSONData] =

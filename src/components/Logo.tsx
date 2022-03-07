@@ -1,5 +1,5 @@
 import React, { FC, Fragment } from "react";
-
+import { themeColor } from "../lib/util";
 const Logo: FC = () => {
   return (
     <Fragment>
@@ -13,7 +13,7 @@ const Logo: FC = () => {
           right: 0,
           borderStyle: "solid",
           borderWidth: "80px 80px 80px 80px",
-          borderColor: "rgb(1,115,98) rgb(1,115,98) transparent transparent",
+          borderColor: `${themeColor} ${themeColor} transparent transparent`,
         }}
       />
       <div

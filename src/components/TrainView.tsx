@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import TrainList from "./TrainList";
 import style from "./TrainView.module.css";
 import { InputNumber, Button, Spin, Modal, Radio } from "antd";
@@ -82,21 +83,32 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
   return (
     <div className={style.container}>
       <div className={style.trainParam}>
-        <div className={style.paramTitle}>网络参数设置</div>
+        <div className={style.paramTitle}>
+          <div>MODAL PARAMETER</div>
+          <Button
+            style={{
+              color: "white",
+            }}
+            className={style.help}
+            type="link"
+            title="Help"
+            icon={<QuestionCircleOutlined />}
+          />
+        </div>
         <Spin
           spinning={trainStatus !== "initial" && trainStatus !== "finish"}
           tip={
             trainStatus === "load"
-              ? "正在加载训练数据..."
+              ? "Loading Data..."
               : trainStatus === "train"
-              ? "正在进行训练: Epoch " + epoch + " / 500"
-              : "训练完成，正在计算结果..."
+              ? "Training: Epoch " + epoch + " / 500"
+              : "Finished."
           }
           wrapperClassName={style.spin}
           size="large"
         >
           <div className={style.paramContainer}>
-            <span className={style.paramText}>特征提取维度</span>
+            <span className={style.paramText}>Embedding Size</span>
             <InputNumber
               className={style.paramInput}
               step={1}
@@ -109,7 +121,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             />
           </div>
           <div className={style.paramContainer}>
-            <span className={style.paramText}>No.1图卷积特征维度</span>
+            <span className={style.paramText}>No.1 GCN Layer Size</span>
             <InputNumber
               className={style.paramInput}
               step={1}
@@ -122,7 +134,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             />
           </div>
           <div className={style.paramContainer}>
-            <span className={style.paramText}>No.2图卷积特征维度</span>
+            <span className={style.paramText}>No.2 GCN Layer Size</span>
             <InputNumber
               className={style.paramInput}
               step={1}
@@ -135,7 +147,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             />
           </div>
           <div className={style.paramContainer}>
-            <span className={style.paramText}>丢弃率</span>
+            <span className={style.paramText}>Drop Rate</span>
             <InputNumber
               className={style.paramInput}
               step={0.1}
@@ -148,7 +160,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             />
           </div>
           <div className={style.paramContainer}>
-            <span className={style.paramText}>学习率</span>
+            <span className={style.paramText}>Learning Rate</span>
             <InputNumber
               className={style.paramInput}
               step={0.001}
@@ -161,7 +173,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             />
           </div>
           <div className={style.paramContainer}>
-            <span className={style.paramText}>权重衰减率</span>
+            <span className={style.paramText}>Weight Decay</span>
             <InputNumber
               className={style.paramInput}
               step={0.001}
@@ -175,21 +187,34 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
           </div>
           <div
             className={style.paramContainer}
-            style={{ justifyContent: "space-around", marginTop: "10px" }}
+            style={{ justifyContent: "space-between", marginTop: "10px" }}
           >
-            <Button onClick={() => setShowWeight((prev) => !prev)}>
-              特征权重
+            <Button
+              type="primary"
+              onClick={() => setShowWeight((prev) => !prev)}
+            >
+              Weight
             </Button>
-            <Button onClick={() => setModalVisible(true)}>训练集</Button>
+            <Button type="primary" onClick={() => setModalVisible(true)}>
+              Train Set
+            </Button>
             <Button type="primary" onClick={onTrainClick}>
-              训练模型
+              Train Model
             </Button>
           </div>
         </Spin>
       </div>
       <div className={style.trainList}>
         <div className={style.trainListTitle}>
-          <span>模型训练历史</span>
+          <div>TRAIN HISTORY</div>
+          <Button
+            style={{
+              color: "white",
+            }}
+            type="link"
+            title="Help"
+            icon={<QuestionCircleOutlined />}
+          />
         </div>
         <TrainList />
       </div>

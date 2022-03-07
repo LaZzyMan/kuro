@@ -6,6 +6,14 @@ import React, {
   useContext,
   useMemo,
 } from "react";
+import {
+  trainSetColor,
+  classColor,
+  selectedRegionColor,
+  buildingColor,
+  inColor,
+  outColor,
+} from "../../lib/util";
 import { AppContext } from "../../AppReducer";
 import bbox from "@turf/bbox";
 import { Layer, Source, MapContext } from "react-mapbox-gl";
@@ -15,6 +23,9 @@ export interface RegionLayerProps {
   onClick: Function;
   status: "normal" | "menu" | "detail";
   targetRids?: number[];
+  buildingData: any;
+  showBuidling: boolean;
+  flowIn: boolean;
 }
 
 const nullGeojson = {
@@ -31,6 +42,9 @@ const RegionLayer: FC<RegionLayerProps> = ({
   status,
   onClick,
   targetRids,
+  flowIn,
+  buildingData,
+  showBuidling,
 }) => {
   const { state } = useContext(AppContext);
   const {
@@ -43,7 +57,6 @@ const RegionLayer: FC<RegionLayerProps> = ({
   const map = useContext(MapContext);
   const [selectedFeature, setSelectedFeature] = useState(nullGeojson);
   const [hoverFeature, setHoverFeature] = useState(nullGeojson);
-  const [buildingFeatures, setBuildingFeatures] = useState(nullGeojson);
 
   const trainSet = useMemo(() => {
     if (displayTrainSet.length === 0) {
@@ -133,16 +146,6 @@ const RegionLayer: FC<RegionLayerProps> = ({
         [bounds[0], bounds[1]],
         [bounds[2], bounds[3]],
       ];
-      const buildings = map!.queryRenderedFeatures(
-        [map!.project(bounds[0]), map!.project(bounds[1])],
-        {
-          layers: ["3dBuilding"],
-        }
-      );
-      setBuildingFeatures({
-        type: "FeatureCollection",
-        features: buildings,
-      } as any);
     },
     [data, map, onClick]
   );
@@ -202,10 +205,10 @@ const RegionLayer: FC<RegionLayerProps> = ({
         }}
       />
       <Source
-        id="selectedBuilding"
+        id="regionBuilding"
         geoJsonSource={{
           type: "geojson",
-          data: buildingFeatures,
+          data: buildingData,
         }}
       />
       <Layer
@@ -219,26 +222,26 @@ const RegionLayer: FC<RegionLayerProps> = ({
                   "match",
                   ["get", "inTrainSet"],
                   "out",
-                  "#0080ff",
+                  trainSetColor[0],
                   "in",
-                  "#ff0000",
-                  "#ff0000",
+                  trainSetColor[1],
+                  trainSetColor[1],
                 ]
               : [
                   "match",
                   ["get", "class"],
                   "C",
-                  "#ef476f",
+                  classColor[0],
                   "G",
-                  "#06d6a0",
+                  classColor[1],
                   "M",
-                  "#073b4c",
+                  classColor[2],
                   "P",
-                  "#ffd166",
+                  classColor[3],
                   "R",
-                  "#118ab2",
+                  classColor[4],
                   "U",
-                  "#8338ec",
+                  classColor[5],
                   "#ffffff",
                 ],
           "fill-opacity": 0.6,
@@ -260,26 +263,26 @@ const RegionLayer: FC<RegionLayerProps> = ({
                   "match",
                   ["get", "inTrainSet"],
                   "out",
-                  "#0080ff",
+                  trainSetColor[0],
                   "in",
-                  "#ff0000",
-                  "#ff0000",
+                  trainSetColor[1],
+                  trainSetColor[1],
                 ]
               : [
                   "match",
                   ["get", "class"],
                   "C",
-                  "#ef476f",
+                  classColor[0],
                   "G",
-                  "#06d6a0",
+                  classColor[1],
                   "M",
-                  "#073b4c",
+                  classColor[2],
                   "P",
-                  "#ffd166",
+                  classColor[3],
                   "R",
-                  "#118ab2",
+                  classColor[4],
                   "U",
-                  "#8338ec",
+                  classColor[5],
                   "#ffffff",
                 ],
           "fill-opacity": 0.8,
@@ -293,10 +296,10 @@ const RegionLayer: FC<RegionLayerProps> = ({
         sourceId="selectedPolygon"
         type="line"
         paint={{
-          "line-color": "#541212",
+          "line-color": selectedRegionColor,
           "line-opacity": 0.8,
-          "line-dasharray": [2, 1],
-          "line-width": 3,
+          // "line-dasharray": [2, 1],
+          "line-width": 5,
         }}
         layout={{
           "line-join": "round",
@@ -308,7 +311,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
         sourceId="targetPolygon"
         type="fill"
         paint={{
-          "fill-color": "red",
+          "fill-color": flowIn ? inColor : outColor,
           "fill-opacity": 0.6,
         }}
         layout={{
@@ -316,37 +319,22 @@ const RegionLayer: FC<RegionLayerProps> = ({
         }}
       />
       <Layer
-        id="3dBuilding"
+        id="regionBuilding"
+        sourceId="regionBuilding"
         type="fill-extrusion"
-        sourceId="composite"
-        sourceLayer="building"
-        filter={["==", "extrude", "true"]}
-        minzoom={10}
         paint={{
-          "fill-extrusion-color": "#aaa",
-          "fill-extrusion-height": 10,
-          "fill-extrusion-base": 0,
-          "fill-extrusion-opacity": 0.3,
-        }}
-        layout={{
-          visibility: status === "normal" ? "visible" : "none",
-        }}
-      />
-      <Layer
-        id="selectedBuilding"
-        sourceId="selectedBuilding"
-        type="fill-extrusion"
-        filter={["==", "extrude", "true"]}
-        paint={{
-          "fill-extrusion-color": "#aaa",
-          "fill-extrusion-height": ["*", 10, ["get", "height"]],
-          "fill-extrusion-base": ["get", "min_height"],
+          "fill-extrusion-color": buildingColor,
+          "fill-extrusion-height": showBuidling
+            ? ["*", ["get", "floor"], 20]
+            : 0,
           "fill-extrusion-opacity": 0.8,
-        }}
-        layout={{
-          visibility: status !== "normal" ? "visible" : "none",
+          "fill-extrusion-height-transition": {
+            duration: 500,
+            delay: 100,
+          },
         }}
       />
+      <Layer id="sky" type="sky" />
     </Fragment>
   );
 };

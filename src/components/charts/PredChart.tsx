@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { classes } from "../../lib/util";
+import { classes, themeColor } from "../../lib/util";
 import React, {
   useCallback,
   FC,
@@ -10,7 +10,6 @@ import React, {
 } from "react";
 import { AppContext } from "../../AppReducer";
 import AttributionChart from "./AttributionChart";
-import _ from "lodash";
 
 export interface Props {
   data: null | any[];
@@ -49,7 +48,7 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
         .attr("viewBox", [0, 0, width, height])
         .attr("style", "max-width: 100%; height: auto;");
 
-      const title = svg
+      svg
         .append("g")
         .attr("transform", `translate(0,${margin})`)
         .selectAll("text")
@@ -113,7 +112,7 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
         .join("g")
         .append("rect")
         // .attr("fill", (_, i) => classes[i].color)
-        .attr("fill", "rgb(1,115,98)")
+        .attr("fill", themeColor)
         .attr("opacity", (d) => 0.3 + 0.7 * d.value)
         .attr(
           "x",
