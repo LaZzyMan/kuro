@@ -258,10 +258,16 @@ const TrainSetChart: FC<Props> = () => {
   return isEmpty(data) ? (
     <Empty
       style={{
-        marginTop: "45%",
+        marginTop: "100px",
       }}
       image={Empty.PRESENTED_IMAGE_SIMPLE}
-      description={<span>No Train Set</span>}
+      description={
+        <div>
+          <div style={{ fontWeight: "bold" }}>No Region in Train Set.</div>
+          <div>Explore the map and</div>
+          <div>add regions to train set.</div>
+        </div>
+      }
     />
   ) : (
     <div

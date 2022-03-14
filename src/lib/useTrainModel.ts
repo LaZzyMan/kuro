@@ -11,6 +11,7 @@ export interface Params {
   dropout: number;
   lr: number;
   wd: number;
+  e: number;
 }
 
 export default function useTrainModel(
@@ -22,7 +23,8 @@ export default function useTrainModel(
   Params,
   any,
   Dispatch<SetStateAction<number[] | undefined>>,
-  Dispatch<SetStateAction<Params>>
+  Dispatch<SetStateAction<Params>>,
+  Dispatch<SetStateAction<any[]>>
 ] {
   const [trainSet, setTrainSet] = useState(initTrainSet);
   const [result, setResult] = useState();
@@ -35,7 +37,9 @@ export default function useTrainModel(
     dropout: 0.5,
     lr: 0.012,
     wd: 0.009,
+    e: 0.01,
   } as Params);
+  const [weights, setWeights] = useState([] as any[]);
 
   useEffect(() => {
     if (!trainSet) return;
@@ -46,7 +50,7 @@ export default function useTrainModel(
 
     socket.on("response_connect", () => {
       console.log("socket connect.");
-      socket.emit("train", trainSet, params, uuid());
+      socket.emit("train", trainSet, params, uuid(), weights);
     });
 
     socket.on("response_disconnect", () => {
@@ -75,5 +79,5 @@ export default function useTrainModel(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, trainSet]);
 
-  return [status, epoch, params, result, setTrainSet, setParams];
+  return [status, epoch, params, result, setTrainSet, setParams, setWeights];
 }

@@ -27,7 +27,7 @@ const LoadInfo: FC<LoadInfoProps> = ({
       <Steps className={style.steps}>
         <Step
           status={fdStatus}
-          title="下载特征数据"
+          title="Download Feature"
           icon={
             fdStatus === "process" ? (
               <LoadingOutlined />
@@ -38,14 +38,14 @@ const LoadInfo: FC<LoadInfoProps> = ({
         />
         <Step
           status={fpStatus}
-          title="解析特征数据"
+          title="Parse Feature"
           icon={
             fpStatus === "process" ? <LoadingOutlined /> : <CloudSyncOutlined />
           }
         />
         <Step
           status={gdStatus}
-          title="下载GeoJSON数据"
+          title="Download GeoJSON"
           icon={
             gdStatus === "process" ? (
               <LoadingOutlined />
@@ -56,7 +56,7 @@ const LoadInfo: FC<LoadInfoProps> = ({
         />
         <Step
           status={gpStatus}
-          title="解析GeoJSON数据"
+          title="Parse GeoJSON"
           icon={
             gpStatus === "process" ? <LoadingOutlined /> : <CloudSyncOutlined />
           }

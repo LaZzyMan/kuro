@@ -19,7 +19,7 @@ export interface Props {
 
 const margin = 10;
 const yPadding = 0.2;
-const titleWidth = 100;
+const titleMargin = 140;
 
 const PredChart: FC<Props> = ({ data, pred, rid }) => {
   const { state } = useContext(AppContext);
@@ -36,6 +36,8 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
       const cellSizeMax = (height - margin) / (7 * yPadding + 6);
       const cellSizeMin = cellSizeMax * 0.5;
       const paddingSize = cellSizeMax * yPadding;
+      const marginLeft = width / (98.5 / 1.5);
+      const titleWidth = titleMargin + marginLeft;
 
       setAttributionChartWidth(
         width - titleWidth - 4 * cellSizeMax - 3 * paddingSize
@@ -48,9 +50,9 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
         .attr("viewBox", [0, 0, width, height])
         .attr("style", "max-width: 100%; height: auto;");
 
-      svg
+      const title = svg
         .append("g")
-        .attr("transform", `translate(0,${margin})`)
+        .attr("transform", `translate(${marginLeft},${margin})`)
         .selectAll("text")
         .data(classes)
         .join("text")
@@ -58,8 +60,38 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
         .attr("y", (_, i) => (i + 0.6) * cellSizeMax + i * paddingSize)
         .attr("fill", "currentColor")
         .attr("font-weight", 500)
-        .attr("text-anchor", "begin")
-        .text((d) => d.abbr);
+        .attr("text-anchor", "begin");
+
+      title
+        .append("tspan")
+        .attr("x", 0)
+        .attr("y", (d, i) =>
+          d.abbr.length === 1
+            ? (i + 0.6) * cellSizeMax + i * paddingSize
+            : (i + 0.42) * cellSizeMax + i * paddingSize
+        )
+        .text((d) => d.abbr[0]);
+      title
+        .append("tspan")
+        .attr("x", 0)
+        .attr("y", (d, i) =>
+          d.abbr.length === 1
+            ? (i + 0.6) * cellSizeMax + i * paddingSize
+            : (i + 0.78) * cellSizeMax + i * paddingSize
+        )
+        .text((d) => (d.abbr.length > 1 ? d.abbr[1] : ""));
+
+      svg
+        .append("g")
+        .attr("transform", `translate(0,${margin})`)
+        .selectAll("line")
+        .data(classes)
+        .join("line")
+        .attr("y1", (_, i) => (i + 0.25) * cellSizeMax + i * paddingSize)
+        .attr("y2", (_, i) => (i + 0.75) * cellSizeMax + i * paddingSize)
+        .attr("stroke-width", 8)
+        .attr("fill", "none")
+        .attr("stroke", (d) => d.color);
 
       svg
         .append("line")
@@ -351,10 +383,10 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
   return (
     <div
       style={{
-        width: "96%",
+        width: "98.5%",
         height: "100%",
-        marginLeft: "2%",
-        marginRight: "2%",
+        marginRight: "1.5%",
+        // marginLeft: "2%",
       }}
     >
       <div
@@ -369,7 +401,7 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
           width: `${attributionChartWidth}px`,
           height: "100%",
           position: "absolute",
-          marginLeft: "2%",
+          // marginLeft: "2%",
           top: "0",
           zIndex: focusCell === -1 ? -1 : "auto",
           // display: focusCell === -1 ? "none" : "block",

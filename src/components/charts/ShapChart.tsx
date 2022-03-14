@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { posColor, negColor } from "../../lib/util";
+import { posColor, negColor, inColor, outColor } from "../../lib/util";
 import FeatureCard from "../FeatureCard";
 import React, { useCallback, FC, useState, useEffect } from "react";
 import _, { range } from "lodash";
@@ -109,66 +109,6 @@ const ShapChart: FC<Props> = ({
         .attr("font-weight", 300)
         .attr("text-anchor", "start")
         .text(`Attribution`)
-        .attr("x", 5);
-
-      const baselineLine = svg
-        .append("g")
-        .attr(
-          "transform",
-          `translate(0,${(sumValue > 0 ? barRange[1] : barRange[0]) + margin})`
-        );
-
-      baselineLine
-        .append("line")
-        .attr("stroke", "#777777")
-        .attr("stroke-dasharray", "5 5")
-        .transition()
-        .duration(100)
-        .ease((t) => t)
-        .delay(100)
-        .attr("x2", width);
-
-      baselineLine
-        .append("text")
-        .attr("y", sumValue > 0 ? 16 : -8)
-        .attr("fill", "#777777")
-        .attr("font-weight", 500)
-        .attr("text-anchor", "end")
-        .text(`Baseline=${baseline.toFixed(3)}`)
-        .transition()
-        .duration(100)
-        .ease((t) => t)
-        .delay(100)
-        .attr("x", width);
-
-      const attributionLine = svg
-        .append("g")
-        .attr(
-          "transform",
-          `translate(0,${(sumValue < 0 ? barRange[1] : barRange[0]) + margin})`
-        );
-
-      attributionLine
-        .append("line")
-        .attr("stroke", sumValue > 0 ? posColor : negColor)
-        .attr("stroke-dasharray", "5 5")
-        .transition()
-        .duration(100)
-        .ease((t) => t)
-        .delay(100)
-        .attr("x2", width);
-
-      attributionLine
-        .append("text")
-        .attr("y", sumValue > 0 ? -8 : 16)
-        .attr("fill", sumValue > 0 ? posColor : negColor)
-        .attr("font-weight", 500)
-        .attr("text-anchor", "start")
-        .text(`Feature Set Attribution=${(baseline + sumValue).toFixed(3)}`)
-        .transition()
-        .duration(100)
-        .ease((t) => t)
-        .delay(100)
         .attr("x", 5);
 
       const bars = svg
@@ -304,6 +244,66 @@ const ShapChart: FC<Props> = ({
         setCardValue(v.value);
         setShowCard(true);
       });
+
+      const baselineLine = svg
+        .append("g")
+        .attr(
+          "transform",
+          `translate(0,${(sumValue > 0 ? barRange[1] : barRange[0]) + margin})`
+        );
+
+      baselineLine
+        .append("line")
+        .attr("stroke", "#777777")
+        .attr("stroke-dasharray", "5 5")
+        .transition()
+        .duration(100)
+        .ease((t) => t)
+        .delay(100)
+        .attr("x2", width);
+
+      baselineLine
+        .append("text")
+        .attr("y", sumValue > 0 ? 16 : -8)
+        .attr("fill", "#777777")
+        .attr("font-weight", 500)
+        .attr("text-anchor", "end")
+        .text(`Baseline=${baseline.toFixed(3)}`)
+        .transition()
+        .duration(100)
+        .ease((t) => t)
+        .delay(100)
+        .attr("x", width);
+
+      const attributionLine = svg
+        .append("g")
+        .attr(
+          "transform",
+          `translate(0,${(sumValue < 0 ? barRange[1] : barRange[0]) + margin})`
+        );
+
+      attributionLine
+        .append("line")
+        .attr("stroke", sumValue > 0 ? inColor : outColor)
+        .attr("stroke-dasharray", "5 5")
+        .transition()
+        .duration(100)
+        .ease((t) => t)
+        .delay(100)
+        .attr("x2", width);
+
+      attributionLine
+        .append("text")
+        .attr("y", sumValue > 0 ? -8 : 16)
+        .attr("fill", sumValue > 0 ? inColor : outColor)
+        .attr("font-weight", 500)
+        .attr("text-anchor", "start")
+        .text(`Feature Set Attribution=${(baseline + sumValue).toFixed(3)}`)
+        .transition()
+        .duration(100)
+        .ease((t) => t)
+        .delay(100)
+        .attr("x", 5);
 
       return { node: svg.node() };
     },

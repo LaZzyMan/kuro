@@ -44,7 +44,7 @@ const distanceSlice = (data: any) => {
 
 const inColors = d3.interpolateRgb(d3.rgb("#ffffff"), d3.rgb(inColor));
 const outColors = d3.interpolateRgb(d3.rgb("#ffffff"), d3.rgb(outColor));
-const interval = 500;
+const interval = 200;
 
 const BrushChart: FC<Props> = ({
   size,
@@ -142,10 +142,14 @@ const BrushChart: FC<Props> = ({
       .endAngle((d: any) => d.data.endAngle);
     const svg = d3
       .create("svg")
-      .attr("width", map!.getContainer().offsetWidth)
-      .attr("height", map!.getContainer().offsetHeight)
-      .attr("viewBox", [-size / 2, -size / 2, size, size])
-      .attr("style", "max-width: 100%;")
+      .attr("width", map!.getContainer().offsetWidth * 2)
+      .attr("height", map!.getContainer().offsetHeight * 2)
+      .attr("viewBox", [
+        -map!.getContainer().offsetWidth,
+        -map!.getContainer().offsetHeight,
+        map!.getContainer().offsetWidth * 2,
+        map!.getContainer().offsetHeight * 2,
+      ])
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
 
@@ -191,7 +195,7 @@ const BrushChart: FC<Props> = ({
       lines,
       node: svg.node(),
     };
-  }, [size, inScale, outScale, centerRadius, zeroData, map]);
+  }, [inScale, outScale, centerRadius, zeroData, map]);
 
   const [chart] = useState(create());
   const [load, setLoad] = useState(false);
@@ -395,7 +399,7 @@ const BrushChart: FC<Props> = ({
             (d: any) => (d.startAngle - d.endAngle) * radius
           )
           .transition()
-          .duration(interval)
+          .duration(100)
           .ease(d3.easeLinear)
           .attrTween("d", (d: any): any => {
             const posA = [
@@ -403,19 +407,23 @@ const BrushChart: FC<Props> = ({
               -radius * Math.cos(d.centerAngle),
             ];
             const posB = d.coord;
-            const l =
-              Math.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2) /
-              2;
-            const dxdy = [
-              (radius + l) * Math.sin(d.centerAngle),
-              -(radius + l) * Math.cos(d.centerAngle),
-            ];
             return (t: number) => {
               const mix = [
                 posA[0] + t * (posB[0] - posA[0]),
                 posA[1] + t * (posB[1] - posA[1]),
               ];
-              return line([posA, dxdy, mix] as any);
+              const l =
+                Math.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2) /
+                3;
+
+              const c1 = [
+                (radius + l) * Math.sin(d.centerAngle),
+                -(radius + l) * Math.cos(d.centerAngle),
+              ];
+
+              const c2 = [mix[0] * 0.8, mix[1] * 0.8];
+              return `M ${posA[0]} ${posA[1]} 
+              C ${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${mix[0]} ${mix[1]}`;
             };
           });
       };

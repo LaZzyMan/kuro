@@ -26,6 +26,10 @@ export interface TrainInfo {
 }
 
 export interface State {
+  contrast: {
+    active: boolean;
+    ref: string | null;
+  };
   currentTrainSet: Array<RegionClass>;
   displayTrainSet: Array<RegionClass>;
   trainList: Array<TrainInfo>;
@@ -40,6 +44,14 @@ export interface State {
 
 const reducer = (state: State, action) => {
   switch (action.type) {
+    case "activeContrast":
+      return {
+        ...state,
+        contrast: {
+          active: action.active,
+          ref: action.ref,
+        },
+      };
     case "setSelectedTrainName":
       return {
         ...state,
@@ -149,6 +161,7 @@ const reducer = (state: State, action) => {
 export const AppContext = React.createContext({} as any);
 
 export const defaultValue: State = {
+  contrast: { active: false, ref: null },
   currentTrainSet: [] as Array<RegionClass>,
   displayTrainSet: [] as Array<RegionClass>,
   trainList: [] as Array<TrainInfo>,

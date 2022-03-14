@@ -1,27 +1,42 @@
-export const posColor = "#f64f59";
-export const negColor = "#12c2e9";
-export const inColor = "#2F3A8F";
-export const outColor = "#FE7E6D";
+import { FeatureWeight } from "../AppReducer";
+
+export const posColor = "#E4B9B7";
+export const negColor = "#A7C3D8";
+export const inColor = "#d8a9a7";
+export const outColor = "#66abe6";
 export const classColor = [
-  "#ef476f",
-  "#06d6a0",
-  "#073b4c",
-  "#ffd166",
-  "#118ab2",
-  "#8338ec",
+  "#e46051",
+  "#2B9A8A",
+  "#F29F5E",
+  "#2A4752",
+  "#E6C266",
+  "#4B3D82",
 ];
 export const datasetColor = [
-  "#81B214",
-  "#BB8082",
-  "#4B778D",
-  "#F58634",
-  "#FFCC29",
+  "#86B0A6",
+  "#EA9288",
+  "#868388",
+  "#EDC794",
+  "#F2B48F",
 ];
-export const trainSetColor = ["#0080ff", "#ff0000"];
-// export const selectedRegionColor = "#541212";
+
+export const datasetColorUS = [
+  "#ADC0BC",
+  "#E2BAB6",
+  "#A6A5A7",
+  "#E5D4BD",
+  "#E8CBBB",
+];
+export const trainSetColor = ["#999999", "#444444"];
 export const selectedRegionColor = "#000000";
 export const buildingColor = "#aaa";
 export const themeColor = "#333333";
+
+// const host = "127.0.0.1:3000";
+const host = "192.168.61.91:7325";
+export const wsURL = `ws://${host}/kuro`;
+export const downloadURL = `http://${host}/download`;
+export const uploadURL = `http://${host}/upload`;
 
 export const classes = [
   {
@@ -29,13 +44,15 @@ export const classes = [
     chName: "商业与服务业用地",
     code: "C",
     color: classColor[0],
-    abbr: "商服用地",
+    abbr: ["Commerical and", "Business Facility"],
+    cnAbbr: "商服用地",
   },
   {
     name: "Park and Square",
     cnName: "绿地与广场用地",
     code: "G",
-    abbr: "绿化用地",
+    abbr: ["Park and Square"],
+    cnAbbr: "绿化用地",
     color: classColor[1],
   },
   {
@@ -43,28 +60,32 @@ export const classes = [
     cnName: "工业用地",
     code: "M",
     color: classColor[2],
-    abbr: "工业用地",
+    abbr: ["Industrial"],
+    cnAbbr: "工业用地",
   },
   {
-    name: "Pubilic Management and Service",
+    name: "Public Management and Service",
     cnName: "公共管理与服务用地",
     code: "P",
     color: classColor[3],
-    abbr: "公管用地",
+    abbr: ["Public Manage-", "ment and Service"],
+    cnAbbr: "公管用地",
   },
   {
     name: "Residential",
     cnName: "居住用地",
     code: "R",
     color: classColor[4],
-    abbr: "居住用地",
+    abbr: ["Residential"],
+    cnAbbr: "居住用地",
   },
   {
     name: "Municipal Publicutilities",
     cnName: "市政公用设施用地",
     code: "U",
     color: classColor[5],
-    abbr: "市政用地",
+    abbr: ["Municipal", "Publicutilities"],
+    cnAbbr: "市政用地",
   },
 ];
 
@@ -113,6 +134,7 @@ export const featureSets = [
     name: "Land Cover",
     abbr: "LC",
     color: datasetColor[0],
+    colorUS: datasetColorUS[0],
     length: 19,
     chinese: "地表覆盖特征",
   },
@@ -121,6 +143,7 @@ export const featureSets = [
     name: "Point of Interest",
     abbr: "POI",
     color: datasetColor[1],
+    colorUS: datasetColorUS[1],
     length: 17,
     chinese: "兴趣点特征",
   },
@@ -129,6 +152,7 @@ export const featureSets = [
     name: "Building",
     abbr: "B",
     color: datasetColor[2],
+    colorUS: datasetColorUS[2],
     length: 4,
     chinese: "建筑特征",
   },
@@ -137,6 +161,7 @@ export const featureSets = [
     name: "Mobility",
     abbr: "M",
     color: datasetColor[3],
+    colorUS: datasetColorUS[3],
     length: 1514,
     chinese: "轨迹流动性特征",
   },
@@ -145,6 +170,7 @@ export const featureSets = [
     name: "Rhythm",
     abbr: "R",
     color: datasetColor[4],
+    colorUS: datasetColorUS[4],
     length: 48,
     chinese: "轨迹节律性特征",
   },
@@ -303,3 +329,25 @@ export function indexOfMax(arr) {
 
   return maxIndex;
 }
+
+export const weightO2A = (weight: FeatureWeight[]) => {
+  const tmp = [0, 19, 36, 40, 1554];
+  return weight.map((w) => [
+    tmp[w.featureSetIndex] + w.featureIndex,
+    w.classIndex,
+    w.weight,
+  ]);
+};
+
+export const weightA2O = (weight: any[]): FeatureWeight[] => {
+  const tmp = [0, 19, 36, 40, 1554];
+  return weight.map((w) => {
+    const i = tmp.indexOf(tmp.filter((v) => v > w[0])[0]) - 1;
+    return {
+      featureSetIndex: i,
+      featureIndex: w[0] - tmp[i],
+      classIndex: w[1],
+      weight: w[2],
+    };
+  });
+};

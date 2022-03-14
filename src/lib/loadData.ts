@@ -1,4 +1,4 @@
-import centeroid from "@turf/centroid";
+import center from "@turf/center";
 import { chunk } from "lodash";
 import area from "@turf/area";
 
@@ -96,7 +96,7 @@ export async function loadGeoJSONData(
             (a, b) => a.properties.rid - b.properties.rid
           );
           const centers = datas[0].features.map(
-            (v: any) => centeroid(v).geometry.coordinates
+            (v: any) => center(v).geometry.coordinates
           );
           datas[0].features = datas[0].features.map((f) => {
             const a = area(f);

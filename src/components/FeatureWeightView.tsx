@@ -9,9 +9,10 @@ import { CloseOutlined } from "@ant-design/icons";
 export interface Props {
   position: "up" | "down";
   weight: FeatureWeight[];
+  editable: boolean;
 }
 
-const FeatureWeightView: FC<Props> = ({ position, weight }) => {
+const FeatureWeightView: FC<Props> = ({ position, weight, editable }) => {
   const { dispatch } = useContext(AppContext);
   const data = useMemo(() => {
     return weight.map((w) => ({
@@ -80,30 +81,48 @@ const FeatureWeightView: FC<Props> = ({ position, weight }) => {
                   alignItems: "center",
                 }}
               >
-                <InputNumber
-                  style={{
-                    color:
-                      w.weight > 0
-                        ? posColor
-                        : w.weight === 0
-                        ? "black"
-                        : negColor,
-                  }}
-                  step={0.1}
-                  min={-1}
-                  max={1}
-                  defaultValue={0}
-                  value={w.weight}
-                  onChange={(v) => onChange(w, v)}
-                />
-                <Button
-                  style={{ marginLeft: "8px" }}
-                  icon={<CloseOutlined />}
-                  size="small"
-                  shape="circle"
-                  type="link"
-                  onClick={() => removeWeight(w)}
-                />
+                {editable ? (
+                  <InputNumber
+                    style={{
+                      color:
+                        w.weight > 0
+                          ? posColor
+                          : w.weight === 0
+                          ? "black"
+                          : negColor,
+                    }}
+                    step={0.1}
+                    min={-1}
+                    max={1}
+                    defaultValue={0}
+                    value={w.weight}
+                    onChange={(v) => onChange(w, v)}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      fontWeight: "bold",
+                      color:
+                        w.weight > 0
+                          ? posColor
+                          : w.weight === 0
+                          ? "black"
+                          : negColor,
+                    }}
+                  >
+                    {w.weight}
+                  </span>
+                )}
+                {editable && (
+                  <Button
+                    style={{ marginLeft: "8px" }}
+                    icon={<CloseOutlined />}
+                    size="small"
+                    shape="circle"
+                    type="link"
+                    onClick={() => removeWeight(w)}
+                  />
+                )}
               </div>
             ),
           },

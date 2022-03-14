@@ -12,6 +12,7 @@ import PredChart from "./charts/PredChart";
 import style from "./AttributionView.module.css";
 import { Empty, Spin, Switch, Button } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import { wsURL } from "../lib/util";
 
 export interface Props {
   rid: null | number;
@@ -37,9 +38,7 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
     }
   }, [trainList, rid, attributionCache]);
 
-  const [status, progress, result, setRid, setModels] = useAttrubte(
-    "ws://192.168.61.91:7325/kuro"
-  );
+  const [status, progress, result, setRid, setModels] = useAttrubte(wsURL);
 
   useEffect(() => {
     setRid(rid);
@@ -112,7 +111,7 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
             Baseline:
           </span>
           <Switch
-          className={style.switch}
+            className={style.switch}
             checkedChildren="Mean"
             unCheckedChildren="Zero"
             onChange={switchChangeHandler}
@@ -136,11 +135,20 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
               style={{
-                paddingTop: "10%",
+                paddingTop: "120px",
                 margin: 0,
               }}
               description={
-                <span>{rid ? "No Train Results." : "Region Unselected."}</span>
+                <div>
+                  <div style={{ fontWeight: "bold" }}>
+                    {rid ? "No Train Result." : "Region Unselected."}
+                  </div>
+                  <div>
+                    {rid
+                      ? "Train models to get feature attribution."
+                      : "Select region on map to explore feature attribution."}
+                  </div>
+                </div>
               }
             />
           )}

@@ -12,8 +12,8 @@ import ReactMapboxGL, { MapContext } from "react-mapbox-gl";
 import Marker from "./Marker";
 import Control from "./Control";
 import RegionLayer from "./RegionLayer";
+import BuildingMarker from "./BuildingMarker";
 import bbox from "@turf/bbox";
-import center from "@turf/center";
 import distance from "@turf/distance";
 import { GeoJSONData, FeatureData } from "../../lib/loadData";
 import mapboxgl from "mapbox-gl";
@@ -24,6 +24,7 @@ import {
   TimeLineChart,
   BrushChart,
 } from "../charts";
+import { wsURL } from "../../lib/util";
 import useRegionData from "../../lib/useRegionData";
 import style from "./KuroMap.module.css";
 import { isEqual } from "lodash";
@@ -61,9 +62,7 @@ const KuroMap: FC<KuroMapProps> = ({
   const [regionCenter, setRegionCenter] = useState([0, 0]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [box, setBox] = useState([0, 0, 0, 0]);
-  const [rid, setRid, adjMatrix, building] = useRegionData(
-    "ws://192.168.61.91:7325/kuro"
-  );
+  const [rid, setRid, adjMatrix, building] = useRegionData(wsURL);
   const [flowData, setFlowData] = useState();
   const [brushData, setBrushData] = useState();
   const [play, setPlay] = useState(false);
@@ -164,12 +163,12 @@ const KuroMap: FC<KuroMapProps> = ({
   const regionClickHandler = useCallback(
     (feature: any) => {
       setBox(bbox(feature));
-      setRegionCenter(center(feature).geometry.coordinates);
+      setRegionCenter(data?.center[feature.properties.rid]!);
       setStatus("menu");
       setRid(feature.properties.rid);
       onSelect(feature.properties.rid);
     },
-    [onSelect, setRid]
+    [onSelect, setRid, data]
   );
 
   const dblClickHandler = useCallback(
@@ -380,7 +379,7 @@ const KuroMap: FC<KuroMapProps> = ({
                   <></>
                 )}
               </Marker>
-              {menuSelected === "traj" ? (
+              {menuSelected === "traj" && (
                 <Control position="bottom-left" classes="flow-controller">
                   <TimeLineChart
                     data={flowData}
@@ -393,14 +392,18 @@ const KuroMap: FC<KuroMapProps> = ({
                     onBrush={brushHandler}
                   />
                 </Control>
-              ) : (
-                <></>
+              )}
+              {menuSelected === "building" && (
+                <BuildingMarker
+                  data={featureData!.featureBuilding[rid!]}
+                  box={box}
+                />
               )}
             </Fragment>
           )}
         </MapContext.Consumer>
       </Map>
-      {menuSelected === "traj" ? (
+      {menuSelected === "traj" && (
         <div className={style.buttonBox}>
           <button
             style={{ fill: "#444444" }}
@@ -462,8 +465,6 @@ const KuroMap: FC<KuroMapProps> = ({
             </svg>
           </button>
         </div>
-      ) : (
-        <></>
       )}
     </Fragment>
   );

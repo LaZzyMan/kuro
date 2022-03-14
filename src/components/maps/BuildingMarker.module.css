@@ -1,0 +1,9 @@
+.container {
+    background-color: #333;
+    color: white;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0.8;
+}

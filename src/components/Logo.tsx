@@ -12,7 +12,7 @@ const Logo: FC = () => {
           top: 0,
           right: 0,
           borderStyle: "solid",
-          borderWidth: "80px 80px 80px 80px",
+          borderWidth: "90px 90px 90px 90px",
           borderColor: `${themeColor} ${themeColor} transparent transparent`,
         }}
       />
@@ -29,7 +29,7 @@ const Logo: FC = () => {
           color: "white",
         }}
       >
-        Kuro
+        KURO
       </div>
     </Fragment>
   );

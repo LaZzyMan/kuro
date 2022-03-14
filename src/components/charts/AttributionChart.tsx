@@ -137,13 +137,17 @@ const AttributionChart: FC<Props> = ({ data, pred, origin, classIndex, rid }) =>
           }))
         )
         .join("path")
-        .attr("opacity", (_, i) => (i === selectedFeatureSet ? 1 : 0.4))
-        .attr("fill", (_, i) => featureSets[i].color);
+        .attr("opacity", 1)
+        .attr("fill", (_, i) =>
+          i === selectedFeatureSet
+            ? featureSets[i].color
+            : featureSets[i].colorUS
+        );
 
       featureSetBar
         .append("title")
         .text(
-          (d, i) => `${featureSets[i].chinese}归因值: ${d.value.toFixed(3)}.`
+          (d, i) => `${featureSets[i].name} Attribution: ${d.value.toFixed(3)}.`
         );
 
       featureSetBar
@@ -307,9 +311,15 @@ const AttributionChart: FC<Props> = ({ data, pred, origin, classIndex, rid }) =>
     if (chart && chart.featureSetBar) {
       // 鼠标悬浮/点击颜色变化
       const bars = (chart.featureSetBar.selectAll("path") as any)._parents;
-      d3.selectAll(bars).attr("opacity", (_, i) => {
-        return i === selectedFeatureSet ? 1 : i === hoverFeatureSet ? 0.8 : 0.4;
-      });
+      d3.selectAll(bars)
+        .attr("opacity", (_, i) => {
+          return i === selectedFeatureSet ? 1 : i === hoverFeatureSet ? 1 : 0.9;
+        })
+        .attr("fill", (_, i) =>
+          i === selectedFeatureSet
+            ? featureSets[i].color
+            : featureSets[i].colorUS
+        );
     }
   }, [selectedFeatureSet, hoverFeatureSet, chart]);
 

@@ -53,6 +53,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
     displayMode,
     selectedTrainName,
     trainList,
+    contrast,
   } = state;
   const map = useContext(MapContext);
   const [selectedFeature, setSelectedFeature] = useState(nullGeojson);
@@ -75,18 +76,44 @@ const RegionLayer: FC<RegionLayerProps> = ({
     }
   }, [displayMode, trainList, selectedTrainName]);
 
+  const contrastResult = useMemo(() => {
+    if (contrast.active) {
+      return trainList.filter((v) => v.name === contrast.ref)[0].result.pred;
+    } else {
+      return null;
+    }
+  }, [contrast, trainList]);
+
   const displayData = useMemo(() => {
     if (displayResult) {
-      return {
-        ...data,
-        features: data.features.map((v) => ({
-          ...v,
-          properties: {
-            ...v.properties,
-            class: displayResult[v.properties.rid],
-          },
-        })),
-      };
+      if (contrastResult) {
+        return {
+          ...data,
+          features: data.features.map((v) => ({
+            ...v,
+            properties: {
+              ...v.properties,
+              class: displayResult[v.properties.rid],
+              contrast:
+                displayResult[v.properties.rid] ===
+                contrastResult[v.properties.rid]
+                  ? "unchanged"
+                  : "changed",
+            },
+          })),
+        };
+      } else {
+        return {
+          ...data,
+          features: data.features.map((v) => ({
+            ...v,
+            properties: {
+              ...v.properties,
+              class: displayResult[v.properties.rid],
+            },
+          })),
+        };
+      }
     } else {
       return {
         ...data,
@@ -100,7 +127,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
         })),
       };
     }
-  }, [trainSet, data, displayResult]);
+  }, [trainSet, data, displayResult, contrastResult]);
 
   const targetFeatures = useMemo(() => {
     if (!targetRids) return nullGeojson;
@@ -169,9 +196,16 @@ const RegionLayer: FC<RegionLayerProps> = ({
         trainSet.indexOf(feature.properties.rid) !== -1 ? "in" : "out";
       if (displayResult)
         feature.properties.class = displayResult[feature.properties.rid];
+
+      if (contrastResult)
+        feature.properties.contrast =
+          displayResult[feature.properties.rid] ===
+          contrastResult[feature.properties.rid]
+            ? "unchanged"
+            : "changed";
       setHoverFeature(feature);
     },
-    [data, map, trainSet, displayResult]
+    [data, map, trainSet, displayResult, contrastResult]
   );
 
   return (
@@ -227,6 +261,16 @@ const RegionLayer: FC<RegionLayerProps> = ({
                   trainSetColor[1],
                   trainSetColor[1],
                 ]
+              : contrast.active
+              ? [
+                  "match",
+                  ["get", "contrast"],
+                  "changed",
+                  inColor,
+                  "unchanged",
+                  outColor,
+                  outColor,
+                ]
               : [
                   "match",
                   ["get", "class"],
@@ -244,7 +288,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
                   classColor[5],
                   "#ffffff",
                 ],
-          "fill-opacity": 0.6,
+          "fill-opacity": 0.8,
         }}
         onClick={clickHandler}
         onMouseMove={mousemoveHandler}
@@ -268,6 +312,16 @@ const RegionLayer: FC<RegionLayerProps> = ({
                   trainSetColor[1],
                   trainSetColor[1],
                 ]
+              : contrast.active
+              ? [
+                  "match",
+                  ["get", "contrast"],
+                  "changed",
+                  inColor,
+                  "unchanged",
+                  outColor,
+                  outColor,
+                ]
               : [
                   "match",
                   ["get", "class"],
@@ -285,7 +339,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
                   classColor[5],
                   "#ffffff",
                 ],
-          "fill-opacity": 0.8,
+          "fill-opacity": 1.0,
         }}
         layout={{
           visibility: status === "normal" ? "visible" : "none",
@@ -312,7 +366,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
         type="fill"
         paint={{
           "fill-color": flowIn ? inColor : outColor,
-          "fill-opacity": 0.6,
+          "fill-opacity": 0.8,
         }}
         layout={{
           visibility: status === "detail" ? "visible" : "none",

@@ -6,6 +6,8 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
     padding: 5%;
+    z-index: 100;
+    border: 1px solid #eeeeee;
 }
 
 .titleContainer {

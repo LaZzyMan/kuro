@@ -10,10 +10,27 @@ export interface Props {
   draggable?: boolean;
   pitchAlignment?: "auto" | "map" | "viewport";
   rotationAlignment?: "auto" | "map" | "viewport";
+  anchor?:
+    | "center"
+    | "top"
+    | "bottom"
+    | "left"
+    | "right"
+    | "top-left"
+    | "top-right"
+    | "bottom-left"
+    | "bottom-right";
 }
 
 const Marker: React.ForwardRefRenderFunction<unknown, Props> = (
-  { children, lngLat, draggable, pitchAlignment, rotationAlignment }: Props,
+  {
+    children,
+    lngLat,
+    draggable,
+    pitchAlignment,
+    rotationAlignment,
+    anchor,
+  }: Props,
   ref: any
 ) => {
   const map = React.useContext(MapContext);
@@ -24,6 +41,7 @@ const Marker: React.ForwardRefRenderFunction<unknown, Props> = (
       pitchAlignment,
       rotationAlignment,
       element: document.createElement("div"),
+      anchor,
     })
   );
 

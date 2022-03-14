@@ -6,7 +6,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import {
+  QuestionCircleOutlined,
+  UploadOutlined,
+  CiCircleOutlined,
+} from "@ant-design/icons";
 import TrainList from "./TrainList";
 import style from "./TrainView.module.css";
 import { InputNumber, Button, Spin, Modal, Radio } from "antd";
@@ -14,6 +18,7 @@ import useTrainModel from "../lib/useTrainModel";
 import { AppContext } from "../AppReducer";
 import FeatureWeightView from "./FeatureWeightView";
 import _ from "lodash";
+import { wsURL, uploadURL, weightO2A } from "../lib/util";
 
 export interface Props {
   defaultTrainSet: number[];
@@ -26,8 +31,18 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
   const [showWeight, setShowWeight] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [trainRadio, setTrainRadio] = useState(1);
-  const [trainStatus, epoch, params, trainResult, setTrainSet, setParams] =
-    useTrainModel("ws://192.168.61.91:7325/kuro");
+  const [uploading, setUploading] = useState(false);
+  const [detailTrainWeight, setDetailTrainWeight] = useState(undefined as any);
+  const [detailShowWeight, setDetailShowWeight] = useState(false);
+  const [
+    trainStatus,
+    epoch,
+    params,
+    trainResult,
+    setTrainSet,
+    setParams,
+    setWeights,
+  ] = useTrainModel(wsURL);
   const trainSet = useMemo(() => {
     return currentTrainSet.map((v) => v.rid);
   }, [currentTrainSet]);
@@ -60,6 +75,34 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
     },
     [setParams]
   );
+
+  const uploadModel = useCallback(() => {
+    setUploading(true);
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".zip";
+    document.body.appendChild(input);
+    input.addEventListener("change", async (e: any) => {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch(uploadURL, { method: "POST", body: formData });
+      const data = await res.json();
+      console.log(data);
+      setUploading(false);
+    });
+    input.click();
+    input.remove();
+  }, []);
+
+  const trainListShowWeightHandler = useCallback((show, weight) => {
+    setDetailShowWeight(show);
+    setDetailTrainWeight(weight);
+  }, []);
+
+  useEffect(() => {
+    setWeights(weightO2A(weight));
+  }, [weight, setWeights]);
 
   useEffect(() => {
     if (!trainResult) return;
@@ -96,9 +139,13 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
           />
         </div>
         <Spin
-          spinning={trainStatus !== "initial" && trainStatus !== "finish"}
+          spinning={
+            (trainStatus !== "initial" && trainStatus !== "finish") || uploading
+          }
           tip={
-            trainStatus === "load"
+            uploading
+              ? "Upload Model..."
+              : trainStatus === "load"
               ? "Loading Data..."
               : trainStatus === "train"
               ? "Training: Epoch " + epoch + " / 500"
@@ -185,19 +232,40 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
               }}
             />
           </div>
+          <div className={style.paramContainer}>
+            <span className={style.paramText}>Loss Fatcor</span>
+            <InputNumber
+              className={style.paramInput}
+              step={0.005}
+              min={0.005}
+              max={0.1}
+              defaultValue={0.01}
+              onChange={(value) => {
+                onParamsChange(value, "e");
+              }}
+            />
+          </div>
           <div
             className={style.paramContainer}
             style={{ justifyContent: "space-between", marginTop: "10px" }}
           >
             <Button
               type="primary"
+              icon={<UploadOutlined />}
+              onClick={uploadModel}
+            />
+
+            <Button
+              type="primary"
               onClick={() => setShowWeight((prev) => !prev)}
             >
               Weight
             </Button>
-            <Button type="primary" onClick={() => setModalVisible(true)}>
-              Train Set
-            </Button>
+            <Button
+              type="primary"
+              onClick={() => setModalVisible(true)}
+              icon={<CiCircleOutlined />}
+            />
             <Button type="primary" onClick={onTrainClick}>
               Train Model
             </Button>
@@ -216,9 +284,19 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
             icon={<QuestionCircleOutlined />}
           />
         </div>
-        <TrainList />
+        <TrainList onShowWeight={trainListShowWeightHandler} />
       </div>
-      {showWeight && <FeatureWeightView position="up" weight={weight} />}
+      {detailShowWeight ? (
+        <FeatureWeightView
+          position="down"
+          weight={detailTrainWeight}
+          editable={false}
+        />
+      ) : (
+        showWeight && (
+          <FeatureWeightView position="up" weight={weight} editable={true} />
+        )
+      )}
       <Modal
         visible={modalVisible}
         title={"训练集比例"}
