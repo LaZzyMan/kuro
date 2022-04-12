@@ -1,7 +1,7 @@
 import React, { useCallback, FC, useMemo, useState, useEffect } from "react";
 import * as d3 from "d3";
 import { concat, isEqual, sum, uniqWith } from "lodash";
-import { inColor, outColor } from "../../lib/util";
+import { inColor, outColor, themeColor } from "../../lib/util";
 
 export interface Props {
   regionId: number;
@@ -154,6 +154,7 @@ const BrushChart: FC<Props> = ({
       .attr("stroke-linecap", "round");
 
     const lines = svg.append("g");
+    const markers = svg.append("g");
 
     const inBar = svg
       .append("g")
@@ -193,6 +194,7 @@ const BrushChart: FC<Props> = ({
       inBar,
       outBar,
       lines,
+      markers,
       node: svg.node(),
     };
   }, [inScale, outScale, centerRadius, zeroData, map]);
@@ -386,44 +388,153 @@ const BrushChart: FC<Props> = ({
           d = d + r;
         });
 
+        const markers = chart.markers
+          .attr("display", "block")
+          .selectAll("g")
+          .data(targets)
+          .join("g");
+        markers
+          .selectAll("path")
+          .data((d) => [d])
+          .join("path")
+          .attr("fill", themeColor)
+          .attr("fill-opacity", 0)
+          .attr(
+            "transform",
+            (d) => `translate(${d.coord[0] - 27 / 2}, ${d.coord[1] - 35.25})`
+          )
+          .attr("d", (d) => {
+            return "M27,13.5C27,19.07 20.25,27 14.75,34.5C14.02,35.5 12.98,35.5 12.25,34.5C6.75,27 0,19.22 0,13.5C0,6.04 6.04,0 13.5,0C20.96,0 27,6.04 27,13.5Z";
+          })
+          .transition()
+          .duration(100)
+          .delay(100)
+          .ease(d3.easeLinear)
+          .attr("fill-opacity", 0.8);
+
+        markers
+          .selectAll("text")
+          .data((d) => [d])
+          .join("text")
+          .attr("fill", "white")
+          .attr("fill-opacity", 0)
+          .attr("text-anchor", "middle")
+          .attr("font-weight", 900)
+          .attr(
+            "transform",
+            (d) => `translate(${d.coord[0]}, ${d.coord[1] - 17})`
+          )
+          .text((d) => d.value.toFixed(1))
+          .transition()
+          .duration(100)
+          .delay(100)
+          .ease(d3.easeLinear)
+          .attr("fill-opacity", 1);
+
         chart.lines
           .attr("display", "block")
           .selectAll("path")
           .data(targets)
           .join("path")
-          .attr("fill", "none")
-          .attr("stroke", mode === "in" ? inColor : outColor)
-          .attr("stroke-linecap", "butt")
-          .attr(
-            "stroke-width",
-            (d: any) => (d.startAngle - d.endAngle) * radius
+          .attr("fill", mode === "in" ? inColor : outColor)
+          .attr("opacity", 0.9)
+          .attr("stroke", (d) =>
+            Math.abs(radius * (d.startAngle - d.endAngle)) > 2
+              ? "white"
+              : "none"
           )
+          // .attr("stroke-opacity", 0.8)
+          .attr("stroke-linecap", "butt")
+          .attr("stroke-width", 0.5)
           .transition()
           .duration(100)
           .ease(d3.easeLinear)
           .attrTween("d", (d: any): any => {
+            const startAngle =
+              d.centerAngle - (d.centerAngle - d.startAngle) * 0.9;
+            const endAngle = d.centerAngle - (d.centerAngle - d.endAngle) * 0.9;
+            const w = Math.abs(radius * (startAngle - endAngle));
+
             const posA = [
               radius * Math.sin(d.centerAngle),
               -radius * Math.cos(d.centerAngle),
             ];
+            const posA1 = [
+              radius * Math.sin(startAngle),
+              -radius * Math.cos(startAngle),
+            ];
+            const posA2 = [
+              radius * Math.sin(endAngle),
+              -radius * Math.cos(endAngle),
+            ];
+
             const posB = d.coord;
             return (t: number) => {
+              const l =
+                Math.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2) /
+                3;
               const mix = [
                 posA[0] + t * (posB[0] - posA[0]),
                 posA[1] + t * (posB[1] - posA[1]),
               ];
-              const l =
-                Math.sqrt((posA[0] - posB[0]) ** 2 + (posA[1] - posB[1]) ** 2) /
-                3;
-
-              const c1 = [
-                (radius + l) * Math.sin(d.centerAngle),
-                -(radius + l) * Math.cos(d.centerAngle),
+              const mix1 = [
+                posA[0] + t * (posB[0] - posA[0]) * 0.9,
+                posA[1] + t * (posB[1] - posA[1]) * 0.9,
               ];
 
-              const c2 = [mix[0] * 0.8, mix[1] * 0.8];
-              return `M ${posA[0]} ${posA[1]} 
-              C ${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${mix[0]} ${mix[1]}`;
+              const mix2 = [
+                posA[0] + t * (posB[0] - posA[0]) * (0.9 - 0.05 * (w / l)),
+                posA[1] + t * (posB[1] - posA[1]) * (0.9 - 0.05 * (w / l)),
+              ];
+
+              const posB1 = [
+                mix1[0] + posA1[0] - posA[0],
+                mix1[1] + posA1[1] - posA[1],
+              ];
+              const posB2 = [
+                mix1[0] + posA2[0] - posA[0],
+                mix1[1] + posA2[1] - posA[1],
+              ];
+
+              // 箭头底部位置
+              const posC1 = [
+                mix2[0] + (posA1[0] - posA[0]) * 2,
+                mix2[1] + (posA1[1] - posA[1]) * 2,
+              ];
+              const posC2 = [
+                mix2[0] + (posA2[0] - posA[0]) * 2,
+                mix2[1] + (posA2[1] - posA[1]) * 2,
+              ];
+
+              const c1 = [
+                (radius + l) * Math.sin(d.startAngle),
+                -(radius + l) * Math.cos(d.startAngle),
+              ];
+
+              // 对圆环范围内点的控制点进行调整
+              const c2 =
+                posB[0] ** 2 + posB[1] ** 2 > radius ** 2
+                  ? [posB1[0] * 0.8, posB1[1] * 0.8]
+                  : [posB1[0] * 1.1, posB1[1] * 1.1];
+
+              const c3 = [
+                (radius + l) * Math.sin(d.endAngle),
+                -(radius + l) * Math.cos(d.endAngle),
+              ];
+
+              const c4 =
+                posB[0] ** 2 + posB[1] ** 2 > radius ** 2
+                  ? [posB2[0] * 0.8, posB2[1] * 0.8]
+                  : [posB2[0] * 1.1, posB2[1] * 1.1];
+
+              return `M ${posA1[0]} ${posA1[1]} 
+              C ${c1[0]} ${c1[1]} ${c2[0]} ${c2[1]} ${posB1[0]} ${posB1[1]}
+              L ${posC1[0]} ${posC1[1]}
+              L ${mix[0]} ${mix[1]}
+              L ${posC2[0]} ${posC2[1]}
+              L ${posB2[0]} ${posB2[1]}
+              C ${c4[0]} ${c4[1]} ${c3[0]} ${c3[1]} ${posA2[0]} ${posA2[1]}
+              L ${posA1[0]} ${posA1[1]}`;
             };
           });
       };
@@ -438,6 +549,7 @@ const BrushChart: FC<Props> = ({
         inBar.attr("fill", "");
         outBar.attr("display", "block");
         chart.lines.attr("display", "none");
+        chart.markers.attr("display", "none");
         onBarHover();
       });
 
@@ -451,6 +563,7 @@ const BrushChart: FC<Props> = ({
         outBar.attr("fill", "");
         inBar.attr("display", "block");
         chart.lines.attr("display", "none");
+        chart.markers.attr("display", "none");
         onBarHover();
       });
       return stackData;

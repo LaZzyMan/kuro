@@ -384,7 +384,7 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
     <div
       style={{
         width: "98.5%",
-        height: "100%",
+        height: "98%",
         marginRight: "1.5%",
         // marginLeft: "2%",
       }}
@@ -399,7 +399,7 @@ const PredChart: FC<Props> = ({ data, pred, rid }) => {
       <div
         style={{
           width: `${attributionChartWidth}px`,
-          height: "100%",
+          height: "98%",
           position: "absolute",
           // marginLeft: "2%",
           top: "0",

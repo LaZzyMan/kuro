@@ -21,11 +21,7 @@ export interface Props {
 const AttributionView: FC<Props> = ({ rid }: Props) => {
   const { state, dispatch } = useContext(AppContext);
   const { trainList, attributionCache } = state;
-  const [baseline, setBaseline] = useState("mean" as "mean" | "zero");
-
-  const switchChangeHandler = useCallback((e) => {
-    setBaseline(e ? "mean" : "zero");
-  }, []);
+  const [active, setActive] = useState(false);
 
   const models = useMemo(() => {
     const cache = rid ? attributionCache[rid] : null;
@@ -40,15 +36,26 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
 
   const [status, progress, result, setRid, setModels] = useAttrubte(wsURL);
 
-  useEffect(() => {
-    setRid(rid);
-    return () => setRid(null);
-  }, [rid, setRid]);
+  const switchChangeHandler = useCallback(
+    (e) => {
+      setActive(e);
+      if (e) {
+        setRid(rid);
+      } else {
+        setRid(null);
+      }
+    },
+    [rid, setRid]
+  );
 
   useEffect(() => {
+    setActive(models.length === 0);
     setModels(models);
-    return () => setModels([]);
-  }, [models, setModels]);
+    return () => {
+      setRid(null);
+      setModels([]);
+    };
+  }, [models, setModels, setRid]);
 
   useEffect(() => {
     if (!result) return;
@@ -86,7 +93,7 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
             alignItems: "center",
           }}
         >
-          <span>FEATURTE ATTRIBUTE</span>
+          <span>FEATURE ATTRIBUTE</span>
           <Button
             style={{ marginLeft: "10px", color: "white" }}
             type="link"
@@ -108,16 +115,16 @@ const AttributionView: FC<Props> = ({ rid }: Props) => {
               fontWeight: 500,
             }}
           >
-            Baseline:
+            Attribution:
           </span>
           <Switch
             className={style.switch}
-            checkedChildren="Mean"
-            unCheckedChildren="Zero"
+            checkedChildren="Active"
+            unCheckedChildren="None"
             onChange={switchChangeHandler}
-            checked={baseline === "mean"}
+            checked={active}
             style={{
-              background: baseline === "mean" ? "#fefefe" : "#ddd",
+              background: active ? "#fefefe" : "#ddd",
             }}
           />
         </div>

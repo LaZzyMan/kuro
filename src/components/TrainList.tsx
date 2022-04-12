@@ -112,7 +112,13 @@ const SortableItem = SortableElement(
             <DragHandle color={color} />
             {edit ? (
               <Input
-                style={{ width: "30%", padding: 0, fontSize: "15px" }}
+                style={{
+                  width: "30%",
+                  padding: 0,
+                  fontSize: "1.2vh",
+                  fontWeight: "bold",
+                  fontFamily: "Microsoft YaHei",
+                }}
                 maxLength={10}
                 value={newName}
                 onChange={(e) => {
@@ -121,7 +127,9 @@ const SortableItem = SortableElement(
                 onPressEnter={saveName}
               />
             ) : (
-              <span style={{ fontWeight: "bold" }}>{value.name}</span>
+              <span style={{ fontWeight: "bold", fontSize: "1.2vh" }}>
+                {value.name}
+              </span>
             )}
             <div className={style.itemButtonArea}>
               <Button
@@ -179,8 +187,6 @@ const SortableItem = SortableElement(
             className={style.itemDetail}
             style={{
               display: detail ? "block" : "none",
-              paddingTop: "10px",
-              paddingBottom: "10px",
             }}
           >
             <div className={style.titleLine}>
@@ -188,7 +194,13 @@ const SortableItem = SortableElement(
               <div>{value.time}</div>
             </div>
             <div className={style.paramTitleLine}>
-              <div style={{ fontWeight: "bold", textAlign: "left" }}>
+              <div
+                style={{
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  fontSize: "1.2vh",
+                }}
+              >
                 PARAMETER
               </div>
               <div className={style.paramContainer}>
@@ -219,7 +231,7 @@ const SortableItem = SortableElement(
               />
             </div>
             <div className={style.titleLine}>
-              <div style={{ fontWeight: "bold" }}>COMPARSION</div>
+              <div style={{ fontWeight: "bold" }}>COMPARISON</div>
               <Select
                 defaultValue={"None"}
                 bordered={true}

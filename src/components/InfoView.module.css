@@ -11,9 +11,10 @@
     font-weight: 500;
     padding-left: 5%;
     padding-right: 5%;
-    padding-bottom: 4px;
-    padding-top: 4px;
-    font-size: 18px;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    font-size: 1.6vh;
+    height: 10.83%;
     box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
     background-color: #333333;
     color: white;
@@ -38,9 +39,10 @@
     font-weight: 500;
     padding-left: 5%;
     padding-right: 5%;
-    padding-bottom: 4px;
-    padding-top: 4px;
-    font-size: 18px;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    font-size: 1.6vh;
+    height: 16.25%;
     box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
     background-color: #333333;
     color: white;
@@ -74,7 +76,7 @@
     justify-content: space-between;
     padding-left: 5%;
     padding-right: 5%;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 1vh;
+    margin-bottom: 1vh;
     height:30px;
 }

@@ -22,12 +22,24 @@
     width: 30%!important;
 }
 
+.paramBtn {
+    font-size: 1.2vh;
+    height: 2.5vh;
+    padding: 0.2vh 0.5vw;
+}
+
+.paramSlider {
+    width:30%;
+    margin: 0!important;
+}
+
 .paramContainer {
     padding-left: 5%;
     padding-right: 5%;
     justify-content: space-between;
     display: flex;
-    margin-top: 9px;
+    font-size: 1.2vh;
+    padding-top: 0.8vh;
 }
 .paramTitle {
     display: flex;
@@ -37,12 +49,17 @@
     font-weight: 500;
     padding-left: 5%;
     padding-right: 5%;
-    padding-bottom: 4px;
-    padding-top: 4px;
-    font-size: 18px;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    font-size: 1.6vh;
     box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
     background-color: #333333;
     color: white;
+    height: 12%;
+}
+
+.paramContent {
+    height: 88%;
 }
 .trainListTitle{
     display: flex;
@@ -52,9 +69,10 @@
     font-weight: 500;
     padding-left: 5%;
     padding-right: 5%;
-    padding-bottom: 4px;
-    padding-top: 4px;
-    font-size: 18px;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    font-size: 1.6vh;
+    height: 12%;
     box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
     background-color: #333333;
     color: white;

@@ -11,10 +11,11 @@
     font-weight: bolder;
     text-align: left;
     padding-left: 1.5%;
-    font-size: 18px;
     font-weight: 500;
-    padding-bottom: 4px;
-    padding-top: 4px;
+    padding-bottom: 1%;
+    padding-top: 1%;
+    font-size: 1.6vh;
+    height: 10.83%;
     justify-content: space-between;
     background-color: #333333;
     color: white;
@@ -23,7 +24,7 @@
 
 .chart {
     width: 100%;
-    height: calc(100% - 40px);
+    height: 89.17%;
     display: flex;
     justify-content: center;
     align-items: center;

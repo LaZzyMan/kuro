@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useMemo } from "react";
+import React, { FC, useCallback, useContext, useMemo, useState } from "react";
 import style from "./FeatureCard.module.css";
 import { AppContext } from "../AppReducer";
 import { InputNumber, Button } from "antd";
@@ -25,6 +25,7 @@ const FeatureCard: FC<Props> = ({
 }) => {
   const { state, dispatch } = useContext(AppContext);
   const { featureData, weight } = state;
+  const [showRegion, setShowRegion] = useState(false);
   const featureIndex = useMemo(() => {
     return featureTypes[featureSetIndex].indexOf(name!);
   }, [featureSetIndex, name]);
@@ -87,20 +88,60 @@ const FeatureCard: FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [featureData, featureIndex]);
 
+  const onPosClick = useCallback(() => {
+    setShowRegion((prev) => {
+      if (!prev) {
+        dispatch({ type: "setMobilityRegionId", rid: featureIndex });
+        console.log(featureIndex);
+      } else {
+        dispatch({ type: "setMobilityRegionId", rid: -1 });
+      }
+      return !prev;
+    });
+  }, [dispatch, featureIndex]);
+
+  const closeHandler = useCallback(() => {
+    dispatch({ type: "setMobilityRegionId", rid: -1 });
+    setShowRegion(false);
+    onClose();
+  }, [onClose, dispatch]);
+
   return (
     <div className={style.container}>
       <div className={style.titleContainer}>
-        <span className={style.title}>{name}</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "end",
+          }}
+        >
+          <button
+            style={{ background: "transparent" }}
+            disabled={featureSetIndex !== 3}
+            onClick={onPosClick}
+          >
+            <img
+              style={{ height: "30px" }}
+              src={
+                showRegion
+                  ? `${process.env.PUBLIC_URL}icon/place_filled.png`
+                  : `${process.env.PUBLIC_URL}icon/place.png`
+              }
+              alt={"Display on Map"}
+            />
+          </button>
+          <span className={style.title}>{name}</span>
+        </div>
         <Button
           type="dashed"
           shape="default"
           icon={<CloseOutlined />}
-          onClick={onClose}
+          onClick={closeHandler}
         />
       </div>
       <div className={style.content}>
         <div className={style.row}>
-          <div className={style.rowTitle}>Value: </div>
+          <div className={style.rowTitle}>VALUE </div>
           <div>
             <span>{value.toFixed(3)}</span>
             <span
@@ -113,7 +154,7 @@ const FeatureCard: FC<Props> = ({
           </div>
         </div>
         <div className={style.row}>
-          <div className={style.rowTitle}>Attribution: </div>
+          <div className={style.rowTitle}>ATTRIBUTION </div>
           <div
             style={{
               color: attribution > 0 ? posColor : negColor,
@@ -123,7 +164,7 @@ const FeatureCard: FC<Props> = ({
           </div>
         </div>
         <div className={style.row}>
-          <div className={style.rowTitle}>Weight: </div>
+          <div className={style.rowTitle}>WEIGHT </div>
           <div>
             <InputNumber
               style={{

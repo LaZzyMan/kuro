@@ -24,7 +24,15 @@ export interface Props {
 
 const InfoView: FC<Props> = ({ rid }: Props) => {
   const { state, dispatch } = useContext(AppContext);
-  const { currentTrainSet, geoJSONData } = state;
+  const { currentTrainSet, geoJSONData, featureData } = state;
+  const trueClass = useMemo(() => {
+    if (rid) {
+      console.log(featureData.trueLabel[rid]);
+      return featureData.trueLabel[rid];
+    } else {
+      return null;
+    }
+  }, [rid, featureData]);
   const [selectedClass, setSelectedClass] = useState(
     null as "C" | "G" | "M" | "P" | "R" | "U" | null
   );
@@ -75,7 +83,7 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
     <div className={style.container}>
       <div className={style.regionInfo}>
         <div className={style.regionInfoTitle}>
-          <span>REGION INFORMATION</span>
+          <span>REGION INFORMATION {trueClass}</span>
           <Button
             style={{ color: "white" }}
             type="link"
@@ -88,8 +96,9 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
             display: "flex",
             paddingLeft: "5%",
             paddingRight: "5%",
-            marginTop: "10px",
+            marginTop: "1vh",
             justifyContent: "space-between",
+            fontSize: "1.2vh",
           }}
         >
           <span style={{ fontWeight: "bold" }}>Area:</span>
@@ -102,8 +111,9 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
             display: "flex",
             paddingLeft: "5%",
             paddingRight: "5%",
-            marginTop: "10px",
+            marginTop: "1vh",
             justifyContent: "space-between",
+            fontSize: "1.2vh",
           }}
         >
           <span style={{ fontWeight: "bold" }}>Num POI:</span>
@@ -114,8 +124,9 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
             display: "flex",
             paddingLeft: "5%",
             paddingRight: "5%",
-            marginTop: "10px",
+            marginTop: "1vh",
             justifyContent: "space-between",
+            fontSize: "1.2vh",
           }}
         >
           <span style={{ fontWeight: "bold" }}>Class:</span>
@@ -154,6 +165,7 @@ const InfoView: FC<Props> = ({ rid }: Props) => {
             display: "flex",
             paddingLeft: "5%",
             paddingRight: "5%",
+            fontSize: "1.2vh",
           }}
         >
           <span style={{ fontWeight: "bold" }}>Add to Train Set</span>

@@ -5,6 +5,7 @@ import React, {
   Fragment,
   useContext,
   useMemo,
+  useEffect,
 } from "react";
 import {
   trainSetColor,
@@ -17,6 +18,7 @@ import {
 import { AppContext } from "../../AppReducer";
 import bbox from "@turf/bbox";
 import { Layer, Source, MapContext } from "react-mapbox-gl";
+import _ from "lodash";
 
 export interface RegionLayerProps {
   data: any;
@@ -54,6 +56,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
     selectedTrainName,
     trainList,
     contrast,
+    mobilityRegionId,
   } = state;
   const map = useContext(MapContext);
   const [selectedFeature, setSelectedFeature] = useState(nullGeojson);
@@ -136,6 +139,55 @@ const RegionLayer: FC<RegionLayerProps> = ({
     );
     return Object.assign({}, data, { features: targets });
   }, [targetRids, data]);
+
+  const mobilityFeatures = useMemo(() => {
+    if (mobilityRegionId < 0) return nullGeojson;
+    const target = (data as any).features.filter(
+      (v: any) => v.properties.rid === mobilityRegionId
+    );
+    return Object.assign({}, data, { features: target });
+  }, [mobilityRegionId, data]);
+
+  useEffect(() => {
+    if (selectedFeature !== nullGeojson) {
+      if (mobilityFeatures === nullGeojson) {
+        let bounds: any = bbox(selectedFeature);
+        map!.fitBounds(bounds, {
+          padding:
+            Math.min(
+              map!.getContainer().offsetHeight,
+              map!.getContainer().offsetWidth
+            ) * 0.35,
+          offset: [
+            0,
+            -Math.min(
+              map!.getContainer().offsetHeight,
+              map!.getContainer().offsetWidth
+            ) * 0.06,
+          ],
+        });
+      } else {
+        const tmp = _.cloneDeep(mobilityFeatures);
+        tmp.features.push(selectedFeature);
+        let bounds: any = bbox(tmp);
+        map!.fitBounds(bounds, {
+          padding:
+            Math.min(
+              map!.getContainer().offsetHeight,
+              map!.getContainer().offsetWidth
+            ) * 0.35,
+          offset: [
+            0,
+            -Math.min(
+              map!.getContainer().offsetHeight,
+              map!.getContainer().offsetWidth
+            ) * 0.06,
+          ],
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mobilityFeatures]);
 
   const clickHandler = useCallback(
     (e: any) => {
@@ -229,6 +281,13 @@ const RegionLayer: FC<RegionLayerProps> = ({
         geoJsonSource={{
           type: "geojson",
           data: selectedFeature,
+        }}
+      />
+      <Source
+        id="mobilityPolygon"
+        geoJsonSource={{
+          type: "geojson",
+          data: mobilityFeatures,
         }}
       />
       <Source
@@ -361,14 +420,58 @@ const RegionLayer: FC<RegionLayerProps> = ({
         }}
       />
       <Layer
+        id="mobilityRegion"
+        sourceId="mobilityPolygon"
+        type="fill"
+        paint={{
+          "fill-color": [
+            "match",
+            ["get", "land_use_code"],
+            "C",
+            classColor[0],
+            "G",
+            classColor[1],
+            "M",
+            classColor[2],
+            "P",
+            classColor[3],
+            "R",
+            classColor[4],
+            "U",
+            classColor[5],
+            "#ffffff",
+          ],
+          "fill-opacity": 0.8,
+        }}
+        layout={
+          {
+            // visibility: status === "detail" ? "visible" : "none",
+          }
+        }
+      />
+      <Layer
         id="detailTargetRegion"
         sourceId="targetPolygon"
         type="fill"
         paint={{
           "fill-color": flowIn ? inColor : outColor,
-          "fill-opacity": 0.8,
+          "fill-opacity": 0.3,
         }}
         layout={{
+          visibility: status === "detail" ? "visible" : "none",
+        }}
+      />
+      <Layer
+        id="detailTargetRegionLine"
+        sourceId="targetPolygon"
+        type="line"
+        paint={{
+          "line-color": flowIn ? inColor : outColor,
+          "line-opacity": 0.8,
+          "line-width": 1.5,
+        }}
+        layout={{
+          "line-join": "round",
           visibility: status === "detail" ? "visible" : "none",
         }}
       />
@@ -379,7 +482,7 @@ const RegionLayer: FC<RegionLayerProps> = ({
         paint={{
           "fill-extrusion-color": buildingColor,
           "fill-extrusion-height": showBuidling
-            ? ["*", ["get", "floor"], 20]
+            ? ["*", ["get", "floor"], 10]
             : 0,
           "fill-extrusion-opacity": 0.8,
           "fill-extrusion-height-transition": {

@@ -353,9 +353,10 @@ const ShapChart: FC<Props> = ({
               width: 0,
               height: 0,
               border: "10px solid transparent",
-              zIndex: 1,
+              zIndex: 2000,
               borderBottom: "none",
               borderTopColor: "white",
+              transform: "translate(0, -1px)",
             }}
           />
           <FeatureCard

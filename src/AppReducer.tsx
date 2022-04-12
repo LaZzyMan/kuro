@@ -30,6 +30,7 @@ export interface State {
     active: boolean;
     ref: string | null;
   };
+  mobilityRegionId: number;
   currentTrainSet: Array<RegionClass>;
   displayTrainSet: Array<RegionClass>;
   trainList: Array<TrainInfo>;
@@ -51,6 +52,11 @@ const reducer = (state: State, action) => {
           active: action.active,
           ref: action.ref,
         },
+      };
+    case "setMobilityRegionId":
+      return {
+        ...state,
+        mobilityRegionId: action.rid,
       };
     case "setSelectedTrainName":
       return {
@@ -162,6 +168,7 @@ export const AppContext = React.createContext({} as any);
 
 export const defaultValue: State = {
   contrast: { active: false, ref: null },
+  mobilityRegionId: -1,
   currentTrainSet: [] as Array<RegionClass>,
   displayTrainSet: [] as Array<RegionClass>,
   trainList: [] as Array<TrainInfo>,

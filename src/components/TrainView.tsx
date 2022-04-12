@@ -13,7 +13,7 @@ import {
 } from "@ant-design/icons";
 import TrainList from "./TrainList";
 import style from "./TrainView.module.css";
-import { InputNumber, Button, Spin, Modal, Radio } from "antd";
+import { Button, Spin, Modal, Radio, Slider } from "antd";
 import useTrainModel from "../lib/useTrainModel";
 import { AppContext } from "../AppReducer";
 import FeatureWeightView from "./FeatureWeightView";
@@ -127,7 +127,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
     <div className={style.container}>
       <div className={style.trainParam}>
         <div className={style.paramTitle}>
-          <div>MODAL PARAMETER</div>
+          <div>MODEL PARAMETER</div>
           <Button
             style={{
               color: "white",
@@ -154,121 +154,164 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
           wrapperClassName={style.spin}
           size="large"
         >
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>Embedding Size</span>
-            <InputNumber
-              className={style.paramInput}
-              step={1}
-              min={10}
-              max={100}
-              defaultValue={50}
-              onChange={(value) => {
-                onParamsChange(value, "embeddingSize");
-              }}
-            />
-          </div>
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>No.1 GCN Layer Size</span>
-            <InputNumber
-              className={style.paramInput}
-              step={1}
-              min={10}
-              max={100}
-              defaultValue={64}
-              onChange={(value) => {
-                onParamsChange(value, "gcnSize1");
-              }}
-            />
-          </div>
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>No.2 GCN Layer Size</span>
-            <InputNumber
-              className={style.paramInput}
-              step={1}
-              min={10}
-              max={100}
-              defaultValue={64}
-              onChange={(value) => {
-                onParamsChange(value, "gcnSize2");
-              }}
-            />
-          </div>
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>Drop Rate</span>
-            <InputNumber
-              className={style.paramInput}
-              step={0.1}
-              min={0.1}
-              max={0.9}
-              defaultValue={0.5}
-              onChange={(value) => {
-                onParamsChange(value, "dropout");
-              }}
-            />
-          </div>
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>Learning Rate</span>
-            <InputNumber
-              className={style.paramInput}
-              step={0.001}
-              min={0.001}
-              max={0.1}
-              defaultValue={0.012}
-              onChange={(value) => {
-                onParamsChange(value, "lr");
-              }}
-            />
-          </div>
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>Weight Decay</span>
-            <InputNumber
-              className={style.paramInput}
-              step={0.001}
-              min={0.001}
-              max={0.1}
-              defaultValue={0.009}
-              onChange={(value) => {
-                onParamsChange(value, "wd");
-              }}
-            />
-          </div>
-          <div className={style.paramContainer}>
-            <span className={style.paramText}>Loss Fatcor</span>
-            <InputNumber
-              className={style.paramInput}
-              step={0.005}
-              min={0.005}
-              max={0.1}
-              defaultValue={0.01}
-              onChange={(value) => {
-                onParamsChange(value, "e");
-              }}
-            />
-          </div>
-          <div
-            className={style.paramContainer}
-            style={{ justifyContent: "space-between", marginTop: "10px" }}
-          >
-            <Button
-              type="primary"
-              icon={<UploadOutlined />}
-              onClick={uploadModel}
-            />
-
-            <Button
-              type="primary"
-              onClick={() => setShowWeight((prev) => !prev)}
+          <div className={style.paramContent}>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>Embedding Size</span>
+              <Slider
+                className={style.paramSlider}
+                min={10}
+                max={100}
+                marks={{
+                  10: "",
+                  100: 100,
+                }}
+                defaultValue={50}
+                step={1}
+                onChange={(value) => {
+                  onParamsChange(value, "embeddingSize");
+                }}
+              />
+            </div>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>No.1 GCN Layer Size</span>
+              <Slider
+                className={style.paramSlider}
+                min={10}
+                max={100}
+                marks={{
+                  10: "",
+                  100: 100,
+                }}
+                defaultValue={64}
+                step={1}
+                onChange={(value) => {
+                  onParamsChange(value, "gcnSize1");
+                }}
+              />
+            </div>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>No.2 GCN Layer Size</span>
+              <Slider
+                className={style.paramSlider}
+                min={10}
+                max={100}
+                marks={{
+                  10: "",
+                  100: 100,
+                }}
+                defaultValue={64}
+                step={1}
+                onChange={(value) => {
+                  onParamsChange(value, "gcnSize2");
+                }}
+              />
+            </div>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>Drop Rate</span>
+              <Slider
+                className={style.paramSlider}
+                min={0.1}
+                max={0.9}
+                marks={{
+                  0.1: "",
+                  0.9: 0.8,
+                }}
+                defaultValue={0.5}
+                step={0.1}
+                onChange={(value) => {
+                  onParamsChange(value, "dropout");
+                }}
+              />
+            </div>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>Learning Rate</span>
+              <Slider
+                className={style.paramSlider}
+                min={0.001}
+                max={0.02}
+                marks={{
+                  0.001: "",
+                  0.02: "0.02",
+                }}
+                defaultValue={0.012}
+                step={0.001}
+                onChange={(value) => {
+                  onParamsChange(value, "wd");
+                }}
+              />
+            </div>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>Weight Decay</span>
+              <Slider
+                className={style.paramSlider}
+                min={0.001}
+                max={0.02}
+                marks={{
+                  0.001: "",
+                  0.02: 0.02,
+                }}
+                defaultValue={0.009}
+                step={0.001}
+                onChange={(value) => {
+                  onParamsChange(value, "wd");
+                }}
+              />
+            </div>
+            <div className={style.paramContainer}>
+              <span className={style.paramText}>Loss Fatcor</span>
+              <Slider
+                className={style.paramSlider}
+                min={0.005}
+                max={0.05}
+                marks={{
+                  0.005: "",
+                  0.05: 0.05,
+                }}
+                defaultValue={0.01}
+                step={0.005}
+                onChange={(value) => {
+                  onParamsChange(value, "e");
+                }}
+              />
+            </div>
+            <div
+              className={style.paramContainer}
+              style={{ justifyContent: "space-between" }}
             >
-              Weight
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => setModalVisible(true)}
-              icon={<CiCircleOutlined />}
-            />
-            <Button type="primary" onClick={onTrainClick}>
-              Train Model
-            </Button>
+              <Button
+                style={{
+                  width: "2.5vh",
+                  height: "2.5vh",
+                }}
+                type="primary"
+                icon={<UploadOutlined />}
+                onClick={uploadModel}
+              />
+
+              <Button
+                className={style.paramBtn}
+                type="primary"
+                onClick={() => setShowWeight((prev) => !prev)}
+              >
+                Weight
+              </Button>
+              {/* <Button
+                style={{
+                  width: "2.5vh",
+                  height: "2.5vh",
+                }}
+                type="primary"
+                onClick={() => setModalVisible(true)}
+                icon={<CiCircleOutlined />}
+              /> */}
+              <Button
+                className={style.paramBtn}
+                type="primary"
+                onClick={onTrainClick}
+              >
+                Train Model
+              </Button>
+            </div>
           </div>
         </Spin>
       </div>

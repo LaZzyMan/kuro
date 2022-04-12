@@ -1,10 +1,10 @@
 .handle {
     display: block;
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
+    width: 2vh;
+    height: 2vh;
+    border-radius: 1vh;
     border-style: solid;
-    border-width: 3px;
+    border-width: 0.3vh;
     opacity: .9;
     margin-right: 5%;
     margin-left: 5%;
@@ -30,6 +30,8 @@
     height: 80%;
     background-color: #f0f0f0;
     border-bottom: 2px solid #efefef;
+    padding-top: "5px";
+    padding-bottom: "5px";
 }
 
 .list {
@@ -48,9 +50,10 @@
 .titleLine {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding-left: 5%;
     padding-right: 5%;
-    margin-bottom: 5px;
+    margin-bottom: 0.5vh;
 }
 
 .paramTitleLine {
@@ -58,7 +61,8 @@
     flex-direction: column;
     padding-left: 5%;
     padding-right: 5%;
-    margin-bottom: 5px;
+    margin-bottom: 0.5vh;
+    font-size: 1.2vh;
 }
 
 .contentLine {
@@ -70,7 +74,9 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 3px;
+    margin-bottom: 0.3vh;
+    font-size: 1vh;
+    color: #333;
 }
 
 .paramContainer {
