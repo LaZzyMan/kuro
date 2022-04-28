@@ -2,20 +2,30 @@
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 240px;
+    width: 280px;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
-    padding: 5%;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
     z-index: 1000;
-    border: 1px solid #eeeeee;
+}
+.content {
+    width: 100%;
+    padding: 3%;
+    padding-bottom: 6%;
 }
 
 .titleContainer {
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 2%;
+    padding-bottom: 2%;
     display: flex;
     height: 40px;
+    background-color: #444;
+    color: white;
     border-bottom: 2px solid #777;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
 }
 
 .title {
@@ -28,11 +38,16 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-top: 8px;
-    height: 40px;
+    padding-top: 4px;
+    height: 32px;
     align-items: center;
 }
 
 .rowTitle {
     font-weight: bold;
+}
+
+.paramSlider {
+    width:50%;
+    margin: 0!important;
 }

@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useContext, useMemo, useState } from "react";
 import style from "./FeatureCard.module.css";
 import { AppContext } from "../AppReducer";
-import { InputNumber, Button } from "antd";
+import { Slider, Button } from "antd";
 import { posColor, negColor, featureTypes } from "../lib/util";
 import { CloseOutlined } from "@ant-design/icons";
 import _ from "lodash";
@@ -14,6 +14,14 @@ export interface Props {
   featureSetIndex: number;
   rid: number | null;
 }
+
+const features = [
+  "LAND COVER",
+  "POI",
+  "BUILDING",
+  "TAXI MOBILITY",
+  "TAXI RHYTHM",
+];
 
 const FeatureCard: FC<Props> = ({
   attribution,
@@ -106,6 +114,22 @@ const FeatureCard: FC<Props> = ({
     onClose();
   }, [onClose, dispatch]);
 
+  const titleIcon = useMemo(() => {
+    if (featureSetIndex === 3) {
+      return showRegion
+        ? `${process.env.PUBLIC_URL}icon/taxi_filled.png`
+        : `${process.env.PUBLIC_URL}icon/taxi.png`;
+    } else if (featureSetIndex === 0) {
+      return `${process.env.PUBLIC_URL}icon/land.png`;
+    } else if (featureSetIndex === 1) {
+      return `${process.env.PUBLIC_URL}icon/poi.png`;
+    } else if (featureSetIndex === 2) {
+      return `${process.env.PUBLIC_URL}icon/building.png`;
+    } else {
+      return `${process.env.PUBLIC_URL}icon/building.png`;
+    }
+  }, [featureSetIndex, showRegion]);
+
   return (
     <div className={style.container}>
       <div className={style.titleContainer}>
@@ -116,41 +140,56 @@ const FeatureCard: FC<Props> = ({
           }}
         >
           <button
-            style={{ background: "transparent" }}
+            style={{
+              background: "transparent",
+              cursor: featureSetIndex === 3 ? "pointer" : "auto",
+              overflow: "hidden",
+            }}
             disabled={featureSetIndex !== 3}
             onClick={onPosClick}
           >
             <img
-              style={{ height: "30px" }}
-              src={
-                showRegion
-                  ? `${process.env.PUBLIC_URL}icon/place_filled.png`
-                  : `${process.env.PUBLIC_URL}icon/place.png`
-              }
+              style={{
+                height: "30px",
+                filter: "drop-shadow(30px 0 white)",
+                transform: "translate(-30px, 0)",
+              }}
+              src={titleIcon}
               alt={"Display on Map"}
             />
           </button>
-          <span className={style.title}>{name}</span>
+          <span className={style.title}>{`${features[featureSetIndex]}`}</span>
         </div>
         <Button
-          type="dashed"
+          type="link"
           shape="default"
+          style={{ color: "white" }}
           icon={<CloseOutlined />}
           onClick={closeHandler}
         />
       </div>
       <div className={style.content}>
         <div className={style.row}>
+          <div className={style.rowTitle}>NAME</div>
+          <div>
+            <strong>{name}</strong>
+          </div>
+        </div>
+        <div className={style.row}>
           <div className={style.rowTitle}>VALUE </div>
           <div>
-            <span>{value.toFixed(3)}</span>
+            <span>
+              <strong>{value.toFixed(3)}</strong>
+            </span>
             <span
               style={{
                 color: value > meanValue ? posColor : negColor,
               }}
-            >{`(${value - meanValue > 0 ? "+" : ""}${(
-              value - meanValue
-            ).toFixed(3)})`}</span>
+            >
+              <strong>{`(${value - meanValue > 0 ? "+" : ""}${(
+                value - meanValue
+              ).toFixed(3)})`}</strong>
+            </span>
           </div>
         </div>
         <div className={style.row}>
@@ -160,24 +199,35 @@ const FeatureCard: FC<Props> = ({
               color: attribution > 0 ? posColor : negColor,
             }}
           >
-            {attribution.toFixed(3)}
+            <strong>{attribution.toFixed(3)}</strong>
           </div>
         </div>
         <div className={style.row}>
           <div className={style.rowTitle}>WEIGHT </div>
-          <div>
-            <InputNumber
-              style={{
-                color: w > 0 ? posColor : w === 0 ? "black" : negColor,
-              }}
-              step={0.1}
-              min={-1}
-              max={1}
-              defaultValue={0}
-              value={w}
-              onChange={onChange}
-            />
-          </div>
+
+          <Slider
+            className={style.paramSlider}
+            min={-1}
+            max={1}
+            marks={{
+              "-1": {
+                style: { color: negColor },
+                label: <strong>-1</strong>,
+              },
+              0: {
+                style: { color: "black" },
+                label: 0,
+              },
+              1: {
+                style: { color: posColor },
+                label: <strong>1</strong>,
+              },
+            }}
+            defaultValue={0}
+            value={w}
+            step={0.1}
+            onChange={onChange}
+          />
         </div>
       </div>
     </div>

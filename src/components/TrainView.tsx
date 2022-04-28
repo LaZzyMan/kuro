@@ -295,7 +295,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
               >
                 Weight
               </Button>
-              {/* <Button
+              <Button
                 style={{
                   width: "2.5vh",
                   height: "2.5vh",
@@ -303,7 +303,7 @@ const TrainView: FC<Props> = ({ defaultTrainSet, trueLabel }: Props) => {
                 type="primary"
                 onClick={() => setModalVisible(true)}
                 icon={<CiCircleOutlined />}
-              /> */}
+              />
               <Button
                 className={style.paramBtn}
                 type="primary"
